@@ -1,0 +1,42 @@
+name: Sync Notion to JSON
+
+on:
+  schedule:
+    - cron: '0 12 * * *'  # Runs daily at 12:00 UTC
+  workflow_dispatch:      # Manual trigger support
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.13'
+
+      - name: Install dependencies
+        run: |
+          if [ -f pyproject.toml ]; then
+            pip install .
+          else
+            echo "No pyproject.toml found — skipping install"
+          fi
+
+      - name: Run sync script
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
+        run: |
+          python scripts/notion_sync.py
+
+      - name: Commit & push changes if any
+        run: |
+          git config --global user.name 'github-actions'
+          git config --global user.email 'github-actions@github.com'
+          git add data/**/*.json
+          git diff --cached --quiet || git commit -m "📥 Sync Notion questions"
+          git push

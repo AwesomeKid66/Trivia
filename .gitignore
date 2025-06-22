@@ -11,3 +11,6 @@ wheels/
 
 # Jupyter Notebooks
 *.ipynb
+
+# Tokens
+.env

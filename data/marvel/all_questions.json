@@ -96,7 +96,7 @@
     "answer": "Even Dead I'm the Hero"
   },
   {
-    "question": "What is the name of the dwarf who made Thanos\u2019s gauntlet?",
+    "question": "What is the name of the dwarf who made Thanos’s gauntlet?",
     "answer": "Eitri"
   },
   {
@@ -112,11 +112,11 @@
     "answer": "Darren Cross"
   },
   {
-    "question": "What is the name of Odin\u2019s trusted Asgardian horse in Thor?",
+    "question": "What is the name of Odin’s trusted Asgardian horse in Thor?",
     "answer": "Sleipnir"
   },
   {
-    "question": "What is the name of the artificial intelligence in Spider-Man\u2019s suit?",
+    "question": "What is the name of the artificial intelligence in Spider-Man’s suit?",
     "answer": "Karen"
   },
   {
@@ -432,9 +432,5 @@
   {
     "question": "What is Luke Cage's real name?",
     "answer": "Carl Lucas"
-  },
-  {
-    "question": "test",
-    "answer": "test2"
   }
 ]
