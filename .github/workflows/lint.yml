@@ -13,7 +13,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
-        python-version: '3.11'         # Your Python version
+        python-version: '3.13'         # Your Python version
 
     - name: Install dependencies (including Ruff)
       run: |
