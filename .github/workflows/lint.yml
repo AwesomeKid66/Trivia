@@ -1,0 +1,34 @@
+name: Ruff Linter (with Autofix)
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4        # Pull your repo code into runner
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'         # Your Python version
+
+    - name: Install dependencies (including Ruff)
+      run: |
+        if [ -f pyproject.toml ]; then
+          pip install .
+        else
+          pip install ruff
+        fi
+
+    - name: Run Ruff autofix
+      run: ruff check . --fix          # Automatically fix issues
+
+    - name: Check for remaining Ruff issues (post-fix)
+      run: ruff check .                # Fail if issues remain after fix
