@@ -4,126 +4,75 @@ import string
 import random
 from thefuzz import fuzz
 from IPython.display import clear_output
+from icecream import ic
+
 
 class TriviaGame:
-    def __init__(self, filename="marvel.json"):
-        __base_dir = os.path.dirname(os.path.abspath(__file__))
-        self.__data_dir = os.path.join(__base_dir, "..", "data")
-        self.__filename = os.path.join(self.__data_dir, filename)
-        self.__questions = self._load_questions()
+    """
+    A class to manage, store, and run trivia quizzes from JSON files.
 
-    def _load_questions(self):
-        if os.path.exists(self.__filename):
-            try:
-                with open(self.__filename, "r") as file:
-                    data = json.load(file)
-                    if isinstance(data, list):
-                        return data
-                    else:
-                        print(f"Warning: {self.__filename} does not contain a list, starting fresh.")
-                        return []
-            except json.JSONDecodeError:
-                print(f"Warning: {self.__filename} is empty or corrupted, starting fresh.")
-                return []
-        else:
-            return []
+    Features:
+        - Interactive question adding
+        - Fuzzy answer matching
+        - Learning mode that removes mastered questions
+    """
 
-    def _save_questions(self):
-        with open(self.__filename, "w") as file:
-            json.dump(self.__questions, file, indent=2)
-
-    def _add_question(self, question, answer):
-        question = question.strip()
-        answer = answer.strip()
-        if not question or not answer:
-            print("Error: Question and answer cannot be empty.")
-            return False
-        self.__questions.append({"question": question, "answer": answer})
-        self._save_questions()
-        print("Question added successfully!")
-        return True
-
-    def _normalize(self, text, ignore_words=None):
-        words = text.lower().split()
-        ignore_words = set(ignore_words or [])
-        cleaned_words = [
-            ''.join(ch for ch in word if ch not in string.punctuation)
-            for word in words
-            if word not in ignore_words
-        ]
-        return ' '.join(cleaned_words).strip()
-    
-    def __normalize_list(self, answer, ignore_words=None):
-                ignore_words = set(ignore_words or [])
-                return sorted([
-                    ''.join(ch for ch in part.lower().strip() if ch not in string.punctuation)
-                    for part in answer.split(';')
-                    if part.lower().strip() not in ignore_words
-                ])
-
-    def run_quiz(self, source="marvel", tolerance=85):
+    def __init__(self, dir_name):
         """
-        Run a trivia quiz using questions from the specified JSON source file.
+        Initialize the TriviaGame and set up file paths.
 
-        Parameters:
-            source (str): The base name of the JSON file (without path) containing questions.
-                        Defaults to "marvel" (i.e., reads from 'data/marvel.json').
-            tolerance (int): Similarity percentage (0-100) to accept approximate answers.
-                            Defaults to 85.
-
-        The method loads questions, shuffles them, and asks the user for answers.
-        It provides feedback on correctness and keeps score.
-        For 'learning' source quizzes, it tracks progress and removes mastered questions.
+        Parameters
+        ----------
+        dir_name : str
+            Name of the subdirectory (within '../data') to store questions.
         """
-        filename = os.path.join(self.__data_dir, f"{source}.json")
-        questions = self._load_json_file(filename)
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        self._data_dir = os.path.join(base_dir, "..", "data")
+        self._dir_path = os.path.join(self._data_dir, dir_name)
+        self._questions_file = os.path.join(self._dir_path, "all_questions.json")
 
+        os.makedirs(self._dir_path, exist_ok=True)
+        self._questions = self._load_questions()
+
+    # =======================
+    # === Public Methods ====
+    # =======================
+
+    def run_quiz(self, source="all_questions.json", tolerance=85):
+        """
+        Run a trivia quiz with optional fuzzy matching and spaced repetition.
+
+        Parameters
+        ----------
+        source : str
+            Filename (in the directory) to load questions from. Default is 'all_questions.json'.
+        tolerance : int
+            Fuzzy match tolerance (0–100). Defaults to 85.
+        """
+        questions = self._load_json_file(source)
         if not questions:
-            print(f"No questions found in {filename}. Please add some first!")
+            print(f"No questions found in {source}. Please add some first!")
             return
 
-        questions_shuffled = questions[:]
-        random.shuffle(questions_shuffled)
-
+        random.shuffle(questions)
         score = 0
-        for i, qa in enumerate(questions_shuffled, 1):
+        questions_asked = 0
+
+        for i, qa in enumerate(questions, 1):
             print(f"\nQuestion {i}: {qa['question']}")
             if ';' in qa['answer']:
-                print("(Please separate each part of your answer with a semicolon ';')")
-            user_answer = input("Your answer: (Type 'exit' to stop quiz)").strip()
+                print("(Separate answers with a semicolon ';')")
 
+            user_answer = input("Your answer: (Type 'exit' to stop quiz) ").strip()
             clear_output(wait=True)
-
             if user_answer.lower() == 'exit':
                 break
 
+            questions_asked += 1
+            correct = self._check_answer(user_answer, qa, tolerance)
             correct_answer = qa['answer'].strip()
 
-            if ';' in correct_answer:
-                ignore_words = qa.get("ignore", [])
-                user_parts = self.__normalize_list(user_answer, ignore_words)
-                correct_parts = self.__normalize_list(correct_answer, ignore_words)
-                is_correct = user_parts == correct_parts
-                similarity = fuzz.ratio(', '.join(user_parts), ', '.join(correct_parts))
-            else:
-                ignore_words = qa.get("ignore", [])
-                alternatives = self._get_alternatives(correct_answer)
-                norm_user = self._normalize(user_answer, ignore_words)
-                norm_correct = self._normalize(correct_answer, ignore_words)
-                is_correct = False
-                for alt in alternatives:
-                    norm_alt = self._normalize(alt, ignore_words)
-                    if norm_user == norm_alt:
-                        is_correct = True
-                        break
-
-                if not is_correct:
-                    similarity = fuzz.ratio(norm_user, norm_correct)
-                    is_correct = similarity >= tolerance
-                else:
-                    similarity = 100  # perfect match
-
-            if is_correct:
+            if correct:
                 print(f"Correct! 🎉   ANSWER: {correct_answer}")
                 score += 1
 
@@ -135,65 +84,154 @@ class TriviaGame:
                     else:
                         print(f"Progress: {qa['correct_count']} / 3 correct to remove.")
             else:
-                print(f"""Wrong. The correct answer was: {correct_answer} \n    You answered: {user_answer} \n similarity:{similarity} ;; tolerance:{tolerance}""")
+                print(f"Wrong. Correct answer: {correct_answer}")
+                print(f"    You answered: {user_answer}")
                 if source != "learning":
                     self._add_unique_question("learning.json", qa)
 
         if source == "learning":
             self._save_json_file("learning.json", questions)
 
-        print(f"\nQuiz complete! You scored {score} out of {len(questions_shuffled)}.")
+        print(f"\nQuiz complete! You scored {score} out of {questions_asked}.")
+
+    def add_questions_interactively(self):
+        """
+        Prompt the user to enter trivia questions and answers interactively.
+        """
+        print("Enter trivia questions. Type 'exit' to stop.")
+        while True:
+            q = input("Enter a question (or 'exit'): ").strip()
+            if q.lower() == 'exit':
+                break
+            a = input("Enter the answer (or 'exit'): ").strip()
+            if a.lower() == 'exit':
+                break
+            self._add_question(q, a)
+
+    # ==========================
+    # === Internal Utilities ===
+    # ==========================
+
+    def _add_question(self, question, answer):
+        """
+        Add a new question-answer pair to the list and save it.
+        """
+        question = question.strip()
+        answer = answer.strip()
+        if not question or not answer:
+            print("Error: Question and answer cannot be empty.")
+            return False
+        self._questions.append({"question": question, "answer": answer})
+        self._save_questions()
+        print("Question added successfully!")
+        return True
+
+    def _check_answer(self, user_answer, qa, tolerance):
+        """
+        Determine whether the user's answer is correct using normalization and fuzzy matching.
+        """
+        correct_answer = qa['answer'].strip()
+        ignore_words = qa.get("ignore", [])
+
+        if ';' in correct_answer:
+            user_parts = self._normalize_list(user_answer, ignore_words)
+            correct_parts = self._normalize_list(correct_answer, ignore_words)
+            similarity = fuzz.ratio(', '.join(user_parts), ', '.join(correct_parts))
+            return user_parts == correct_parts or similarity >= tolerance
+
+        else:
+            norm_user = self._normalize(user_answer, ignore_words)
+            alternatives = self._get_alternatives(correct_answer)
+            for alt in alternatives:
+                if norm_user == self._normalize(alt, ignore_words):
+                    return True
+            similarity = fuzz.ratio(norm_user, self._normalize(correct_answer, ignore_words))
+            return similarity >= tolerance
+
+    def _load_questions(self):
+        """
+        Load all saved questions from 'all_questions.json'.
+        """
+        if os.path.exists(self._questions_file):
+            try:
+                with open(self._questions_file, "r") as file:
+                    data = json.load(file)
+                    return data if isinstance(data, list) else []
+            except json.JSONDecodeError:
+                print(f"Warning: {self._questions_file} is empty or corrupted.")
+        return []
+
+    def _save_questions(self):
+        """
+        Save the current list of questions to 'all_questions.json'.
+        """
+        with open(self._questions_file, "w") as file:
+            json.dump(self._questions, file, indent=2)
+
+    def _normalize(self, text, ignore_words=None):
+        """
+        Normalize a single-answer string: lowercase, remove punctuation, ignore common words.
+        """
+        words = text.lower().split()
+        ignore_words = set(ignore_words or [])
+        cleaned = [
+            ''.join(ch for ch in word if ch not in string.punctuation)
+            for word in words
+            if word not in ignore_words
+        ]
+        return ' '.join(cleaned).strip()
+
+    def _normalize_list(self, answer, ignore_words=None):
+        """
+        Normalize multi-part answers separated by semicolons.
+        """
+        ignore_words = set(ignore_words or [])
+        return sorted([
+            ''.join(ch for ch in part.lower().strip() if ch not in string.punctuation)
+            for part in answer.split(';')
+            if part.lower().strip() not in ignore_words
+        ])
+
+    def _get_alternatives(self, answer):
+        """
+        Return alternative answers if the main answer contains parenthetical options.
+        """
+        answer = answer.strip()
+        if '(' in answer and ')' in answer:
+            before = answer[:answer.index('(')].strip()
+            inside = answer[answer.index('(') + 1: answer.index(')')].strip()
+            return [before, inside]
+        return [answer]
 
     def _load_json_file(self, filename):
-        full_path = os.path.join(self.__data_dir, filename) if not os.path.isabs(filename) else filename
-        if os.path.exists(full_path):
+        """
+        Load a JSON file and return its contents.
+        """
+        path = os.path.join(self._dir_path, filename)
+        if os.path.exists(path):
             try:
-                with open(full_path, "r") as f:
+                with open(path, "r") as f:
                     data = json.load(f)
-                    if isinstance(data, list):
-                        return data
+                    return data if isinstance(data, list) else []
             except json.JSONDecodeError:
                 pass
         return []
 
     def _save_json_file(self, filename, data):
-        full_path = os.path.join(self.__data_dir, filename) if not os.path.isabs(filename) else filename
-        with open(full_path, "w") as f:
+        """
+        Save data (list of questions) to a JSON file.
+        """
+        path = os.path.join(self._dir_path, filename)
+        with open(path, "w") as f:
             json.dump(data, f, indent=2)
 
     def _add_unique_question(self, filename, question_entry):
+        """
+        Add a question to a file only if it's not already present.
+        """
         data = self._load_json_file(filename)
         if question_entry not in data:
-            question_entry = question_entry.copy()  # Avoid mutating original
-            question_entry["correct_count"] = 0
-            self._save_json_file(filename, data + [question_entry])
-
-    def _get_alternatives(self, answer):
-        answer = answer.strip()
-        if '(' in answer and ')' in answer:
-            before = answer[:answer.index('(')].strip()
-            inside = answer[answer.index('(')+1 : answer.index(')')].strip()
-            return [before, inside]
-        else:
-            return [answer]
-
-    def add_questions_interactively(self):
-        """
-        Prompt the user to interactively add new trivia questions and answers.
-
-        The user is repeatedly asked to enter a question and its answer.
-        Input 'exit' for either prompt to stop adding questions.
-        Successfully added questions are saved immediately.
-        """
-        print("Enter your trivia questions. Type 'exit' to stop.")
-
-        while True:
-            q = input("Enter a question (or 'exit' to stop): ").strip()
-            if q.lower() == 'exit':
-                print("Stopping question input.")
-                break
-            a = input("Enter the answer (or 'exit' to stop): ").strip()
-            if a.lower() == 'exit':
-                print("Stopping question input.")
-                break
-            self._add_question(q, a)
+            new_entry = question_entry.copy()
+            new_entry["correct_count"] = 0
+            data.append(new_entry)
+            self._save_json_file(filename, data)
