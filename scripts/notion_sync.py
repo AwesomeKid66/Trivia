@@ -67,13 +67,6 @@ def fetch_new_questions():
             continue
         answer = answer_prop["rich_text"][0]["text"]["content"].strip()
 
-        # Extract ignore words (optional)
-        ignore_words = []
-        ignore_prop = props.get("Ignore Words", {})
-        if ignore_prop.get("rich_text") and len(ignore_prop["rich_text"]) > 0:
-            raw_ignore = ignore_prop["rich_text"][0]["text"]["content"]
-            ignore_words = [w.strip() for w in raw_ignore.split(",") if w.strip()]
-
         # Get folder/category for this question
         folder = get_folder_from_page(page)
 
@@ -82,8 +75,6 @@ def fetch_new_questions():
             "question": question,
             "answer": answer,
         }
-        if ignore_words:
-            question_entry["ignore"] = ignore_words
 
         # Add to folder bucket
         new_questions_per_folder.setdefault(folder, []).append(question_entry)
