@@ -4,6 +4,8 @@ on:
   schedule:
     - cron: '0 12 * * *'  # Runs daily at 12:00 UTC
   workflow_dispatch:      # Manual trigger support
+  push:
+  pull_request:
 
 permissions:
   contents: write         # Gives the permission to push
