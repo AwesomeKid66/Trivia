@@ -53,6 +53,11 @@ def fetch_new_questions():
     for page in results:
         props = page["properties"]
 
+        synced = props["Synced"]["checkbox"]
+
+        if synced:
+            continue
+
         # Extract question
         question_prop = props.get("Question", {})
         if not question_prop.get("title") or len(question_prop["title"]) == 0:
