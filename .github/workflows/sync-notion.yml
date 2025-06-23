@@ -5,6 +5,9 @@ on:
     - cron: '0 12 * * *'  # Runs daily at 12:00 UTC
   workflow_dispatch:      # Manual trigger support
 
+permissions:
+  contents: write         # Gives the permission to push
+
 jobs:
   sync:
     runs-on: ubuntu-latest
