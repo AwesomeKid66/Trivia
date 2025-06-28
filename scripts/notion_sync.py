@@ -46,17 +46,20 @@ def save_json(folder, data):
 
 def fetch_new_questions():
     new_questions_per_folder = {}
-    query_results = notion.databases.query(database_id=db_id)
+    query_results = notion.databases.query(
+        database_id=db_id,
+        filter={
+            "property": "Synced",
+            "checkbox": {
+                "equals": False
+            }
+        }
+    )
 
     results = query_results.get("results", [])
 
     for page in results:
         props = page["properties"]
-
-        synced = props["Synced"]["checkbox"]
-
-        if synced:
-            continue
 
         # Extract question
         question_prop = props.get("Question", {})
@@ -94,21 +97,63 @@ def fetch_new_questions():
 
     return new_questions_per_folder
 
+def check_all_synced():
+    query_results = notion.databases.query(
+        database_id=db_id,
+        filter={
+            "property": "Synced",
+            "checkbox": {
+                "equals": False
+            }
+        }
+    )
+
+    return False if query_results else True
+
+def archive_pages() -> None:
+    query_results = notion.databases.query(
+        database_id=db_id,
+        filter={
+            "property": "Synced",
+            "checkbox": {
+                "equals": True
+            }
+        }
+    )
+
+    results = query_results.get("results", [])
+
+    for page in results:        
+        notion.pages.update(
+            page_id=page["id"],
+            archived=True
+        )
+
+
 def main():
     new_questions = fetch_new_questions()
 
     if not new_questions:
-        print("✅ No new questions found.")
-        return
+        print("ℹ️ No new questions to sync.")
+    else:
+        for folder, questions in new_questions.items():
+            print(f"📁 Adding {len(questions)} question(s) to folder '{folder}'")
 
-    for folder, questions in new_questions.items():
-        print(f"Adding {len(questions)} questions to folder '{folder}'")
+            existing = load_json(folder)
+            existing.extend(questions)
+            save_json(folder, existing)
 
-        existing = load_json(folder)
-        existing.extend(questions)
-        save_json(folder, existing)
+        print("✅ All new questions synced and saved.")
 
-    print("✅ All new questions synced and saved.")
+    # Now double-check if everything is synced
+    all_synced = check_all_synced()
+
+    if not all_synced:
+        print("📦 All pages are synced. Archiving now...")
+        archive_pages()
+        print("✅ All synced pages archived.")
+    else:
+        print("⚠️ Some pages are still not synced. Archiving skipped.")
 
 if __name__ == "__main__":
     main()
