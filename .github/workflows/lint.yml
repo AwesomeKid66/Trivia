@@ -1,6 +1,6 @@
 name: Ruff Linter (with Autofix)
 
-on: [push, pull_request]
+on: push
 
 jobs:
   lint:
@@ -16,12 +16,7 @@ jobs:
         python-version: '3.13'         # Your Python version
 
     - name: Install dependencies (including Ruff)
-      run: |
-        if [ -f pyproject.toml ]; then
-          pip install .
-        else
-          pip install ruff
-        fi
+      run: pip install ruff
 
     - name: Run Ruff autofix
       run: ruff check . --fix          # Automatically fix issues
