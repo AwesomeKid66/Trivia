@@ -1,8 +1,8 @@
 name: Sync Notion to JSON
 
 on:
-  schedule:
-    - cron: '0 12 * * *'  # Runs daily at 12:00 UTC
+  # schedule:
+    # - cron: '0 12 * * *'  # Runs daily at 12:00 UTC
   workflow_dispatch:      # Manual trigger support
   push:
   pull_request:
