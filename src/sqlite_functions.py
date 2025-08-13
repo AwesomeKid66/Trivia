@@ -25,7 +25,22 @@ def insert_question(topic, question, answer, got_wrong=0) -> None:
     conn.commit()
     conn.close()
 
-def get_unique_topics() -> str:
+def delete_question(id) -> str:
+    """
+    Deletes a trivia question from the database
+    """
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+
+    cursor.execute('DELETE FROM questions WHERE id=?', (id))
+
+    conn.commit()
+    conn.close()
+
+def get_unique_topics() -> list:
+    """
+    Obtains all unique topics from the database
+    """
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 

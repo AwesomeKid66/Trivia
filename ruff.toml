@@ -1,7 +1,7 @@
 target-version = "py313"
 line-length = 100
 
-select = [
+lint.select = [
     "E",  # Style errors
     "W",  # Style warnings
     "F",  # Pyflakes
@@ -12,19 +12,19 @@ select = [
     "S",  # Security
 ]
 
-ignore = [
+lint.ignore = [
     "E501", # Line too long (handled by line-length above)
     "B008", # Function calls in argument defaults
     "S101", # Use of assert
     "S311", # Non-cryptographic random
 ]
 
-[flake8-quotes]
+[lint.flake8-quotes]
 inline-quotes = "single"
 multiline-quotes = "single"
 docstring-quotes = "double"
 avoid-escape = true
 
-[isort]
+[lint.isort]
 combine-as-imports = true
 force-sort-within-sections = true
