@@ -1,8 +1,7 @@
-import sqlite3
 from pathlib import Path
-import questionary
+import sqlite3
 
-DB_PATH = Path(__file__).parent.parent / "data" / "database.db"
+DB_PATH = Path(__file__).parent.parent / 'data' / 'database.db'
 
 def insert_question(topic, question, answer, got_wrong=0):
     """
@@ -18,10 +17,10 @@ def insert_question(topic, question, answer, got_wrong=0):
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
-    cursor.execute("""
+    cursor.execute('''
         INSERT INTO questions (topic, question, answer, got_wrong)
         VALUES (?, ?, ?, ?)
-    """, (topic, question, answer, got_wrong))
+    ''', (topic, question, answer, got_wrong))
 
     conn.commit()
     conn.close()
@@ -31,7 +30,7 @@ def get_unique_topics():
     cursor = conn.cursor()
 
     # Select distinct topics
-    cursor.execute("SELECT DISTINCT topic FROM questions")
+    cursor.execute('SELECT DISTINCT topic FROM questions')
     rows = cursor.fetchall()
 
     conn.close()
@@ -48,11 +47,10 @@ def add_question() -> None:
 
     topics = get_unique_topics()
 
-    topic = input(f"Please Use One of These {topics}")
+    topic = input(f'Please Use One of These {topics}')
 
-    question = input(f"What is the question?")
+    question = input('What is the question?')
 
-    answer = input(f"What is the answer?")
+    answer = input('What is the answer?')
 
     insert_question(topic,question,answer)
-    
