@@ -1,12 +1,13 @@
 import os
-sys.path.append(str(Path(__file__).resolve().parents[2]))
 import sys
+from pathlib import Path
 
 from notion_client import Client
 from dotenv import load_dotenv
 from dataclasses import dataclass
 from collections import deque
-from pathlib import Path
+
+sys.path.append(str(Path(__file__).resolve().parents[2]))
 from src.sqlite_functions import insert_question
 
 
