@@ -1,10 +1,10 @@
 import json
 import os
-import string
 import random
-from thefuzz import fuzz
+import string
+
 from IPython.display import clear_output
-from icecream import ic
+from thefuzz import fuzz
 
 
 class TriviaGame:
@@ -27,9 +27,9 @@ class TriviaGame:
             Name of the subdirectory (within '../data') to store questions.
         """
         base_dir = os.path.dirname(os.path.abspath(__file__))
-        self._data_dir = os.path.join(base_dir, "..", "data")
+        self._data_dir = os.path.join(base_dir, '..', 'data')
         self._dir_path = os.path.join(self._data_dir, dir_name)
-        self._questions_file = os.path.join(self._dir_path, "all_questions.json")
+        self._questions_file = os.path.join(self._dir_path, 'all_questions.json')
 
         os.makedirs(self._dir_path, exist_ok=True)
         self._questions = self._load_questions()
@@ -38,7 +38,7 @@ class TriviaGame:
     # === Public Methods ====
     # =======================
 
-    def run_quiz(self, source="all_questions.json", tolerance=85):
+    def run_quiz(self, source='all_questions.json', tolerance=85):
         """
         Run a trivia quiz with optional fuzzy matching and spaced repetition.
 
@@ -51,7 +51,7 @@ class TriviaGame:
         """
         questions = self._load_json_file(source)
         if not questions:
-            print(f"No questions found in {source}. Please add some first!")
+            print(f'No questions found in {source}. Please add some first!')
             return
 
         random.shuffle(questions)
@@ -73,26 +73,26 @@ class TriviaGame:
             correct_answer = qa['answer'].strip()
 
             if correct:
-                print(f"Correct! 🎉   ANSWER: {correct_answer}")
+                print(f'Correct! 🎉   ANSWER: {correct_answer}')
                 score += 1
 
-                if source == "learning":
-                    qa["correct_count"] = qa.get("correct_count", 0) + 1
-                    if qa["correct_count"] >= 3:
+                if source == 'learning':
+                    qa['correct_count'] = qa.get('correct_count', 0) + 1
+                    if qa['correct_count'] >= 3:
                         questions.remove(qa)
-                        print("✅ Mastered! Removed from learning.json.")
+                        print('✅ Mastered! Removed from learning.json.')
                     else:
                         print(f"Progress: {qa['correct_count']} / 3 correct to remove.")
             else:
-                print(f"Wrong. Correct answer: {correct_answer}")
-                print(f"    You answered: {user_answer}")
-                if source != "learning":
-                    self._add_unique_question("learning.json", qa)
+                print(f'Wrong. Correct answer: {correct_answer}')
+                print(f'    You answered: {user_answer}')
+                if source != 'learning':
+                    self._add_unique_question('learning.json', qa)
 
-        if source == "learning":
-            self._save_json_file("learning.json", questions)
+        if source == 'learning':
+            self._save_json_file('learning.json', questions)
 
-        print(f"\nQuiz complete! You scored {score} out of {questions_asked}.")
+        print(f'\nQuiz complete! You scored {score} out of {questions_asked}.')
 
     def add_questions_interactively(self):
         """
@@ -119,11 +119,11 @@ class TriviaGame:
         question = question.strip()
         answer = answer.strip()
         if not question or not answer:
-            print("Error: Question and answer cannot be empty.")
+            print('Error: Question and answer cannot be empty.')
             return False
-        self._questions.append({"question": question, "answer": answer})
+        self._questions.append({'question': question, 'answer': answer})
         self._save_questions()
-        print("Question added successfully!")
+        print('Question added successfully!')
         return True
 
     def _check_answer(self, user_answer, qa, tolerance):
@@ -131,7 +131,7 @@ class TriviaGame:
         Determine whether the user's answer is correct using normalization and fuzzy matching.
         """
         correct_answer = qa['answer'].strip()
-        ignore_words = qa.get("ignore", [])
+        ignore_words = qa.get('ignore', [])
 
         if ';' in correct_answer:
             user_parts = self._normalize_list(user_answer, ignore_words)
@@ -154,18 +154,18 @@ class TriviaGame:
         """
         if os.path.exists(self._questions_file):
             try:
-                with open(self._questions_file, "r") as file:
+                with open(self._questions_file) as file:
                     data = json.load(file)
                     return data if isinstance(data, list) else []
             except json.JSONDecodeError:
-                print(f"Warning: {self._questions_file} is empty or corrupted.")
+                print(f'Warning: {self._questions_file} is empty or corrupted.')
         return []
 
     def _save_questions(self):
         """
         Save the current list of questions to 'all_questions.json'.
         """
-        with open(self._questions_file, "w") as file:
+        with open(self._questions_file, 'w') as file:
             json.dump(self._questions, file, indent=2)
 
     def _normalize(self, text, ignore_words=None):
@@ -210,7 +210,7 @@ class TriviaGame:
         path = os.path.join(self._dir_path, filename)
         if os.path.exists(path):
             try:
-                with open(path, "r") as f:
+                with open(path) as f:
                     data = json.load(f)
                     return data if isinstance(data, list) else []
             except json.JSONDecodeError:
@@ -222,7 +222,7 @@ class TriviaGame:
         Save data (list of questions) to a JSON file.
         """
         path = os.path.join(self._dir_path, filename)
-        with open(path, "w") as f:
+        with open(path, 'w') as f:
             json.dump(data, f, indent=2)
 
     def _add_unique_question(self, filename, question_entry):
@@ -232,6 +232,6 @@ class TriviaGame:
         data = self._load_json_file(filename)
         if question_entry not in data:
             new_entry = question_entry.copy()
-            new_entry["correct_count"] = 0
+            new_entry['correct_count'] = 0
             data.append(new_entry)
             self._save_json_file(filename, data)
