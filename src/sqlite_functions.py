@@ -1,9 +1,9 @@
 from pathlib import Path
 import sqlite3
 
-DB_PATH = Path(__file__).parent.parent / 'data' / 'database.db'
+DB_PATH = Path(__file__).parent.parent / "data" / "database.db"
 
-def insert_question(topic, question, answer, got_wrong=0) -> None:
+def insert_question(topic: str, question: str, answer: str) -> None:
     """
     Inserts a trivia question into the database.
 
@@ -17,22 +17,22 @@ def insert_question(topic, question, answer, got_wrong=0) -> None:
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
-    cursor.execute('''
+    cursor.execute("""
         INSERT INTO questions (topic, question, answer, got_wrong)
         VALUES (?, ?, ?, ?)
-    ''', (topic, question, answer, got_wrong))
+    """, (topic, question, answer, 0))
 
     conn.commit()
     conn.close()
 
-def delete_question(id) -> str:
+def delete_question(id: int) -> str:
     """
     Deletes a trivia question from the database
     """
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
-    cursor.execute('DELETE FROM questions WHERE id=?', (id))
+    cursor.execute("DELETE FROM questions WHERE id=?", (id))
 
     conn.commit()
     conn.close()
@@ -45,7 +45,7 @@ def get_unique_topics() -> list:
     cursor = conn.cursor()
 
     # Select distinct topics
-    cursor.execute('SELECT DISTINCT topic FROM questions')
+    cursor.execute("SELECT DISTINCT topic FROM questions")
     rows = cursor.fetchall()
 
     conn.close()
@@ -62,10 +62,24 @@ def add_question() -> None:
 
     topics = get_unique_topics()
 
-    topic = input(f'Please Use One of These {topics}')
+    topic = input(f"Please Use One of These {topics}")
 
-    question = input('What is the question?')
+    question = input("What is the question?")
 
-    answer = input('What is the answer?')
+    answer = input("What is the answer?")
 
     insert_question(topic,question,answer)
+
+
+def load_topic(topic: str):
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT * FROM questions WHERE topic=?", (topic,))
+
+    rows = cursor.fetchall()
+
+    conn.close()
+
+    return rows
+
