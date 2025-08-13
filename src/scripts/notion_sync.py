@@ -2,19 +2,19 @@ from collections import deque
 from dataclasses import dataclass
 import os
 
-from dotenv import load_dotenv
-from notion_client import Client
-
 # src/scripts/sync.py
 from pathlib import Path
 import sys
+
+from dotenv import load_dotenv
+from notion_client import Client
 
 # Ensure the project root (parent of 'src') is on sys.path
 project_root = Path(__file__).resolve().parent.parent.parent  # up from src/scripts to project root
 if str(project_root) not in sys.path:
     sys.path.insert(0, str(project_root))
 
-from src.sqlite_functions import insert_question # noqa: E402
+from src.sqlite_functions import insert_question  # noqa: E402
 
 
 @dataclass
