@@ -76,9 +76,10 @@ def fetch_new_questions():
 
 def get_folder_from_page(page):
     props = page["properties"]
+    print(props)
     folder_prop = props.get("Topic", {})
 
-    return folder_prop["select"]["name"] 
+    return folder_prop["select"]["name"]
 
 def check_all_synced():
     query_results = notion.databases.query(
@@ -137,4 +138,4 @@ def main():
         print("⚠️ Some pages are still not synced. Archiving skipped.")
 
 if __name__ == "__main__":
-    main()
+    fetch_new_questions()
