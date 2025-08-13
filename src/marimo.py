@@ -1,13 +1,13 @@
 import marimo
 
-__generated_with = "0.14.17"
-app = marimo.App(width="medium")
+__generated_with = '0.14.17'
+app = marimo.App(width='medium')
 
 
 @app.cell
 def _():
+
     import marimo as mo
-    import sqlite3 as sq
     import sqlite_functions as sqf
     return mo, sqf
 
@@ -16,7 +16,7 @@ def _():
 def _():
     import sqlalchemy
 
-    DATABASE_URL = "sqlite:///data/database.db"
+    DATABASE_URL = 'sqlite:///data/database.db'
     engine = sqlalchemy.create_engine(DATABASE_URL)
     return (engine,)
 
@@ -30,13 +30,13 @@ def _(sqf):
 @app.cell
 def _(engine, mo):
     _df = mo.sql(
-        f"""
+        '''
         DELETE FROM questions where id=190
-        """,
+        ''',
         engine=engine
     )
     return
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     app.run()
