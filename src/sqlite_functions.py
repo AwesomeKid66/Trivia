@@ -3,7 +3,7 @@ import sqlite3
 
 DB_PATH = Path(__file__).parent.parent / 'data' / 'database.db'
 
-def insert_question(topic, question, answer, got_wrong=0):
+def insert_question(topic, question, answer, got_wrong=0) -> None:
     """
     Inserts a trivia question into the database.
 
@@ -25,7 +25,7 @@ def insert_question(topic, question, answer, got_wrong=0):
     conn.commit()
     conn.close()
 
-def get_unique_topics():
+def get_unique_topics() -> str:
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 

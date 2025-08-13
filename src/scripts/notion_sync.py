@@ -25,7 +25,7 @@ db_id = os.getenv('NOTION_DATABASE_ID')
 # Base data directory
 DB_PATH = Path(__file__).parent.parent / 'data' / 'database.db'
 
-def fetch_new_questions():
+def fetch_new_questions() -> deque:
     new_questions_per_folder = deque()
     query_results = notion.databases.query(
         database_id=db_id,
@@ -74,14 +74,14 @@ def fetch_new_questions():
         )
     return new_questions_per_folder
 
-def get_folder_from_page(page):
+def get_folder_from_page(page) -> str:
     props = page['properties']
     print(props)
     folder_prop = props.get('Topic', {})
 
     return folder_prop['select']['name']
 
-def check_all_synced():
+def check_all_synced() -> None:
     query_results = notion.databases.query(
         database_id=db_id,
         filter={
