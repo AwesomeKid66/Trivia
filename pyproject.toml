@@ -5,6 +5,7 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "auto-mix-prep>=0.2.0",
     "ipython>=9.3.0",
     "notion-client>=2.4.0",
     "python-dotenv>=1.1.0",
@@ -18,4 +19,5 @@ dev = [
     "icecream>=2.1.4",
     "ipykernel>=6.29.5",
     "marimo>=0.14.17",
+    "sqlalchemy>=2.0.43",
 ]
