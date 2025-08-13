@@ -36,7 +36,7 @@ jobs:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }} 
           NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
         run: |
-          python scripts/notion_sync.py
+          python src/scripts/notion_sync.py
 
       - name: Commit & push changes if any
         run: |
