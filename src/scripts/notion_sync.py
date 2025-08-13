@@ -138,4 +138,4 @@ def main():
         print("⚠️ Some pages are still not synced. Archiving skipped.")
 
 if __name__ == "__main__":
-    fetch_new_questions()
+    main()
