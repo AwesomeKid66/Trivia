@@ -1,0 +1,46 @@
+# ruff.toml — Strict but reasonable Ruff config
+
+# Target Python version
+target-version = "py313"
+
+# Show absolute paths in lint messages
+show-source = true
+
+# Max line length (PEP 8 default is 79, but we’ll be pragmatic here)
+line-length = 100
+
+# Rules to enable:
+# - E / W = Pycodestyle (style issues)
+# - F     = Pyflakes (bug-finding)
+# - I     = isort (import sorting)
+# - B     = flake8-bugbear (extra bug-prone patterns)
+# - Q     = flake8-quotes (consistent quotes)
+# - UP    = pyupgrade (modern syntax)
+# - S     = flake8-bandit (security)
+select = [
+    "E",  # Style errors
+    "W",  # Style warnings
+    "F",  # Pyflakes
+    "I",  # isort
+    "B",  # Bugbear
+    "Q",  # Quotes
+    "UP", # pyupgrade
+    "S",  # Security
+]
+
+# Rules to ignore (less useful or too noisy in strict mode)
+ignore = [
+    "E501", # Line too long (we'll handle with line-length above instead)
+    "B008", # Do not perform function calls in argument defaults
+    "S101", # Use of assert (fine in tests)
+    "S311", # Random generator not secure (often fine for non-security code)
+]
+
+# Quote style: single quotes
+[flake8-quotes]
+quotes = "single"
+
+# isort settings (via Ruff)
+[isort]
+combine-as-imports = true
+force-sort-within-sections = true

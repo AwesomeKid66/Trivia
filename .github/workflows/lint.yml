@@ -1,25 +1,42 @@
 name: Ruff Linter (with Autofix)
 
-on: push
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
 
 jobs:
   lint:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4        # Pull your repo code into runner
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.13'         # Your Python version
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
 
-    - name: Install dependencies (including Ruff)
-      run: pip install ruff
+      - name: Install Ruff
+        run: pip install ruff
 
-    - name: Run Ruff autofix
-      run: ruff check . --fix          # Automatically fix issues
+      - name: Run Ruff autofix
+        run: ruff check . --fix
 
-    - name: Check for remaining Ruff issues (post-fix)
-      run: ruff check .                # Fail if issues remain after fix
+      - name: Commit changes if any
+        run: |
+          if [[ -n "$(git status --porcelain)" ]]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git commit -am "chore: Ruff autofix"
+            git push
+          fi
+
+      - name: Check for remaining Ruff issues
+        run: ruff check .

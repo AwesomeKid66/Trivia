@@ -17,4 +17,5 @@ dependencies = [
 dev = [
     "icecream>=2.1.4",
     "ipykernel>=6.29.5",
+    "marimo>=0.14.17",
 ]
