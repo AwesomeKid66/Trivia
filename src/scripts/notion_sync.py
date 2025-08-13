@@ -13,7 +13,7 @@ import sys
 project_root = Path(__file__).resolve().parent.parent.parent  # up from src/scripts to project root
 if str(project_root) not in sys.path:
     sys.path.insert(0, str(project_root))
-1
+
 from src.sqlite_functions import insert_question
 
 
