@@ -25,30 +25,36 @@ def insert_question(topic: str, question: str, answer: str) -> None:
     conn.commit()
     conn.close()
 
-def delete_question(id: int) -> str:
+def delete_question(id: int) -> list:
     """
     Deletes a trivia question from the database
+
+    Args:
+        id (int): The id of the item to delete
     """
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
+    with sqlite3.connect(DB_PATH) as conn:
+        cursor = conn.cursor()
 
-    cursor.execute("DELETE FROM questions WHERE id=?", (id))
+        cursor.execute("SELECT * FROM questions WHERE id=?", (id,))
+        row = cursor.fetchone()
 
-    conn.commit()
-    conn.close()
+        user_input = input(f"Is this the question and answer you would like to delete(y/n)?\nQuestion: {row[2]}\nAnswer: {row[3]}\n")
+        if user_input.lower().strip() == "n":
+            return
+        cursor.execute("DELETE FROM questions WHERE id=?", (id,))
+
+        conn.commit()
 
 def get_unique_topics() -> list:
     """
     Obtains all unique topics from the database
     """
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
+    with sqlite3.connect(DB_PATH) as conn:
+        cursor = conn.cursor()
 
-    # Select distinct topics
-    cursor.execute("SELECT DISTINCT topic FROM questions")
-    rows = cursor.fetchall()
-
-    conn.close()
+        # Select distinct topics
+        cursor.execute("SELECT DISTINCT topic FROM questions")
+        rows = cursor.fetchall()
 
     # Extract topics from rows (each row is a tuple like ('Harry Potter',))
     topics = [row[0] for row in rows]
@@ -71,15 +77,34 @@ def add_question() -> None:
     insert_question(topic,question,answer)
 
 
-def load_topic(topic: str):
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
+def load_topic(topic: str) -> list:
+    """
+    Loads all questions from a given topic
 
-    cursor.execute("SELECT * FROM questions WHERE topic=?", (topic,))
+    Args:
+        topic (str): name of the topic
+    """
+    with sqlite3.connect(DB_PATH) as conn:
+        cursor = conn.cursor()
 
-    rows = cursor.fetchall()
+        cursor.execute("SELECT * FROM questions WHERE topic=?", (topic,))
 
-    conn.close()
+        rows = cursor.fetchall()
 
     return rows
 
+def check_for_duplicates() -> list:
+    """
+    Checks if there are any possible duplicate questions/answer in the database.
+    Currently just checks if the answers are the same and flags if they are
+    """
+    with sqlite3.connect(DB_PATH) as conn:
+        cursor = conn.cursor()
+
+        cursor.execute("""SELECT answer, COUNT(*) AS count"
+                       FROM questions
+                       GROUP BY answer
+                       HAVING COUNT(*) > 1""")
+        rows = cursor.fetchall
+
+    return rows
