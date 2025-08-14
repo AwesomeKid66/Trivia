@@ -6,7 +6,7 @@
   "cells": [
     {
       "id": "Hbol",
-      "code_hash": "37c3b0888c7be295505d36146d37cc4d",
+      "code_hash": "2821331c7a8a198f6945a5c3eea99397",
       "outputs": [
         {
           "type": "data",
@@ -18,8 +18,8 @@
       "console": []
     },
     {
-      "id": "MJUe",
-      "code_hash": "8f020459f1c3633bf268c7a0dca5ed6d",
+      "id": "yPSQ",
+      "code_hash": null,
       "outputs": [
         {
           "type": "data",
@@ -28,16 +28,76 @@
           }
         }
       ],
+      "console": []
+    },
+    {
+      "id": "rwbL",
+      "code_hash": null,
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "exception",
+          "evalue": "tuple indices must be integers or slices, not str",
+          "traceback": []
+        }
+      ],
       "console": [
         {
           "type": "stream",
           "name": "stdout",
-          "text": "Is this the question and answer you would like to delete(y/n)?\nQuestion: t\nAnswer: t\n"
+          "text": "\nQuestion 1: What did Will draw for Joyce that she proudly displayed at Melvald's when he was younger?\n"
+        },
+        {
+          "type": "stream",
+          "name": "stderr",
+          "text": "<span class=\"codehilite\"><div class=\"highlight\"><pre><span></span><span class=\"gt\">Traceback (most recent call last):</span>\n  File <span class=\"nb\">&quot;/Users/mokrzesik/Desktop/Coding/Trivia/.venv/lib/python3.13/site-packages/marimo/_runtime/executor.py&quot;</span>, line <span class=\"m\">139</span>, in <span class=\"n\">execute_cell</span>\n<span class=\"w\">    </span><span class=\"k\">return</span> <span class=\"nb\">eval</span><span class=\"p\">(</span><span class=\"n\">cell</span><span class=\"o\">.</span><span class=\"n\">last_expr</span><span class=\"p\">,</span> <span class=\"n\">glbls</span><span class=\"p\">)</span>\n  File <span class=\"nb\">&quot;/var/folders/nm/40gz4pj552j07lkrcwwmt34c0000gn/T/marimo_97870/__marimo__cell_rwbL_.py&quot;</span>, line <span class=\"m\">1</span>, in <span class=\"n\">&lt;module&gt;</span>\n<span class=\"w\">    </span><span class=\"n\">trivia</span><span class=\"o\">.</span><span class=\"n\">run_quiz</span><span class=\"p\">(</span><span class=\"s2\">&quot;Stranger Things&quot;</span><span class=\"p\">)</span>\n<span class=\"w\">    </span><span class=\"pm\">~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^</span>\n  File <span class=\"nb\">&quot;/Users/mokrzesik/Desktop/Coding/Trivia/src/trivia.py&quot;</span>, line <span class=\"m\">53</span>, in <span class=\"n\">run_quiz</span>\n<span class=\"w\">    </span><span class=\"k\">if</span> <span class=\"s2\">&quot;;&quot;</span> <span class=\"ow\">in</span> <span class=\"n\">answer</span><span class=\"p\">:</span>\n<span class=\"w\">              </span><span class=\"pm\">^^^^^^^</span>\n<span class=\"gr\">TypeError</span>: <span class=\"n\">tuple indices must be integers or slices, not str</span>\n</pre></div>\n</span>"
+        }
+      ]
+    },
+    {
+      "id": "MJUe",
+      "code_hash": "5f3df568eb18418687a3795c98ddfffb",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "vblA",
+      "code_hash": "8159d6e64d2273bcce910946c536b4a3",
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "exception",
+          "evalue": "string indices must be integers, not 'str'",
+          "traceback": []
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "\nQuestion 1: What does Murray make for the Byers, Argyle, and Mike when he visits their home in Lenora?\nYour answer: (Type 'exit' to stop quiz) "
         },
         {
           "type": "stream",
           "name": "stdout",
-          "text": " y\n"
+          "text": " idk\n"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "\u001b[2K\r\u001b[2K\r"
+        },
+        {
+          "type": "stream",
+          "name": "stderr",
+          "text": "<span class=\"codehilite\"><div class=\"highlight\"><pre><span></span><span class=\"gt\">Traceback (most recent call last):</span>\n  File <span class=\"nb\">&quot;/Users/mokrzesik/Desktop/Coding/Trivia/.venv/lib/python3.13/site-packages/marimo/_runtime/executor.py&quot;</span>, line <span class=\"m\">139</span>, in <span class=\"n\">execute_cell</span>\n<span class=\"w\">    </span><span class=\"k\">return</span> <span class=\"nb\">eval</span><span class=\"p\">(</span><span class=\"n\">cell</span><span class=\"o\">.</span><span class=\"n\">last_expr</span><span class=\"p\">,</span> <span class=\"n\">glbls</span><span class=\"p\">)</span>\n  File <span class=\"nb\">&quot;/var/folders/nm/40gz4pj552j07lkrcwwmt34c0000gn/T/marimo_97962/__marimo__cell_vblA_.py&quot;</span>, line <span class=\"m\">1</span>, in <span class=\"n\">&lt;module&gt;</span>\n<span class=\"w\">    </span><span class=\"n\">trivia</span><span class=\"o\">.</span><span class=\"n\">run_quiz</span><span class=\"p\">(</span><span class=\"s2\">&quot;Stranger Things&quot;</span><span class=\"p\">)</span>\n<span class=\"w\">    </span><span class=\"pm\">~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^</span>\n  File <span class=\"nb\">&quot;/Users/mokrzesik/Desktop/Coding/Trivia/src/trivia.py&quot;</span>, line <span class=\"m\">62</span>, in <span class=\"n\">run_quiz</span>\n<span class=\"w\">    </span><span class=\"n\">correct</span> <span class=\"o\">=</span> <span class=\"bp\">self</span><span class=\"o\">.</span><span class=\"n\">_check_answer</span><span class=\"p\">(</span><span class=\"n\">user_answer</span><span class=\"p\">,</span> <span class=\"n\">answer</span><span class=\"p\">)</span>\n  File <span class=\"nb\">&quot;/Users/mokrzesik/Desktop/Coding/Trivia/src/trivia.py&quot;</span>, line <span class=\"m\">80</span>, in <span class=\"n\">_check_answer</span>\n<span class=\"w\">    </span><span class=\"n\">correct_answer</span> <span class=\"o\">=</span> <span class=\"n\">qa</span><span class=\"p\">[</span><span class=\"s2\">&quot;answer&quot;</span><span class=\"p\">]</span><span class=\"o\">.</span><span class=\"n\">strip</span><span class=\"p\">()</span>\n<span class=\"w\">                     </span><span class=\"pm\">~~^^^^^^^^^^</span>\n<span class=\"gr\">TypeError</span>: <span class=\"n\">string indices must be integers, not &#39;str&#39;</span>\n</pre></div>\n</span>"
         }
       ]
     }

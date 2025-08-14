@@ -10,7 +10,7 @@ from sqlite_functions import load_topic
 
 class TriviaGame:
     """
-    A class to manage, store, and run trivia quizzes from JSON files.
+    A class to manage, store, and run trivia quizzes from SQLite database.
 
     Features:
         - Interactive question adding
@@ -50,7 +50,7 @@ class TriviaGame:
             question = qa[2]
             answer = qa[3]
             print(f"\nQuestion {i}: {question}")
-            if ";" in qa["answer"]:
+            if ";" in answer:
                 print("(Separate answers with a semicolon ';')")
 
             user_answer = input("Your answer: (Type 'exit' to stop quiz) ").strip()
@@ -60,7 +60,7 @@ class TriviaGame:
 
             questions_asked += 1
             correct = self._check_answer(user_answer, answer)
-            correct_answer = qa["answer"].strip()
+            correct_answer = answer.strip()
 
             if correct:
                 print(f"Correct! 🎉   ANSWER: {correct_answer}")
