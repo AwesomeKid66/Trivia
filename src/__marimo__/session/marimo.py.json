@@ -1,0 +1,45 @@
+{
+  "version": "1",
+  "metadata": {
+    "marimo_version": "0.14.17"
+  },
+  "cells": [
+    {
+      "id": "Hbol",
+      "code_hash": "37c3b0888c7be295505d36146d37cc4d",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": []
+    },
+    {
+      "id": "MJUe",
+      "code_hash": "8f020459f1c3633bf268c7a0dca5ed6d",
+      "outputs": [
+        {
+          "type": "data",
+          "data": {
+            "text/plain": ""
+          }
+        }
+      ],
+      "console": [
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "Is this the question and answer you would like to delete(y/n)?\nQuestion: t\nAnswer: t\n"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " y\n"
+        }
+      ]
+    }
+  ]
+}
