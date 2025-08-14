@@ -6,13 +6,19 @@ app = marimo.App(width="medium")
 
 @app.cell
 def _():
-    import sqlite_functions as sqf
-    return (sqf,)
+    from trivia import TriviaGame
+    return (TriviaGame,)
 
 
 @app.cell
-def _(sqf):
-    sqf.delete_question(192)
+def _(TriviaGame):
+    trivia = TriviaGame()
+    return (trivia,)
+
+
+@app.cell
+def _(trivia):
+    trivia.run_quiz("Stranger Things")
     return
 
 

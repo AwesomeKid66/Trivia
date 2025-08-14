@@ -1,0 +1,20 @@
+// .vscode/settings.json
+{
+  "files.exclude": {
+    "**/__pycache__/": true,
+    "**/.ruff_cache/": true,
+    "**/.venv/": true,
+    "**/__marimo__/": true,
+    "**/__init__.py": true,
+    "**/uv.lock": true,
+    "**/.vscode/": true
+  },
+  "files.watcherExclude": {
+    "**/__pycache__/**": true,
+    "**/.ruff_cache/**": true,
+    "**/.venv/**": true,
+    "**/__marimo__/**": true,
+    "**/uv.lock": true,
+    "**/.vscode/": true
+  }
+}
