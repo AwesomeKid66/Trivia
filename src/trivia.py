@@ -48,23 +48,23 @@ class TriviaGame:
 
         for i, qa in enumerate(questions, 1):
             question = qa[2]
-            answer = qa[3]
+            answer = qa[3].strip()
             print(f"\nQuestion {i}: {question}")
             if ";" in answer:
                 print("(Separate answers with a semicolon ';')")
 
-            user_answer = input("Your answer: (Type 'exit' to stop quiz) ").strip()
-            clear_output(wait=True)
-            if user_answer.lower() == "exit":
+            user_answer = input("Your answer: (Type 'exit' to stop quiz) ").lower().strip()
+            if user_answer == "exit":
                 break
 
             questions_asked += 1
             correct = self._check_answer(user_answer, answer)
-            correct_answer = answer.strip()
 
             if correct:
-                print(f"Correct! 🎉   ANSWER: {correct_answer}")
+                print(f"Correct! 🎉   ANSWER: {answer}")
                 score += 1
+            else:
+                print(f"InCorrect :(.  ANSWER: {answer}")
 
         print(f"\nQuiz complete! You scored {score} out of {questions_asked}.")
 
@@ -72,51 +72,45 @@ class TriviaGame:
     # === Internal Utilities ===
     # ==========================
 
-    def _check_answer(self, user_answer, qa):
+    def _check_answer(self, user_answer, correct_answer):
         """
         Determine whether the user's answer is correct using normalization and fuzzy matching.
         """
         tolerance = 85
-        correct_answer = qa["answer"].strip()
-        ignore_words = qa.get("ignore", [])
 
         if ";" in correct_answer:
-            user_parts = self._normalize_list(user_answer, ignore_words)
-            correct_parts = self._normalize_list(correct_answer, ignore_words)
+            user_parts = self._normalize_list(user_answer)
+            correct_parts = self._normalize_list(correct_answer)
             similarity = fuzz.ratio(", ".join(user_parts), ", ".join(correct_parts))
-            return user_parts == correct_parts or similarity >= tolerance
-
-        else:
-            norm_user = self._normalize(user_answer, ignore_words)
-            alternatives = self._get_alternatives(correct_answer)
-            for alt in alternatives:
-                if norm_user == self._normalize(alt, ignore_words):
-                    return True
-            similarity = fuzz.ratio(norm_user, self._normalize(correct_answer, ignore_words))
             return similarity >= tolerance
 
-    def _normalize(self, text, ignore_words=None):
+        else:
+            norm_user_answer = self._normalize(user_answer)
+            alternatives = self._get_alternatives(correct_answer)
+            for alt in alternatives:
+                if norm_user_answer == self._normalize(alt):
+                    return True
+            similarity = fuzz.ratio(norm_user_answer, self._normalize(correct_answer))
+            return similarity >= tolerance
+
+    def _normalize(self, text):
         """
         Normalize a single-answer string: lowercase, remove punctuation, ignore common words.
         """
         words = text.lower().split()
-        ignore_words = set(ignore_words or [])
         cleaned = [
             "".join(ch for ch in word if ch not in string.punctuation)
             for word in words
-            if word not in ignore_words
         ]
         return " ".join(cleaned).strip()
 
-    def _normalize_list(self, answer, ignore_words=None):
+    def _normalize_list(self, answer):
         """
         Normalize multi-part answers separated by semicolons.
         """
-        ignore_words = set(ignore_words or [])
         return sorted([
-            "".join(ch for ch in part.lower().strip() if ch not in string.punctuation)
-            for part in answer.split(";")
-            if part.lower().strip() not in ignore_words
+            "".join(ch for ch in answer_part.lower().strip() if ch not in string.punctuation)
+            for answer_part in answer.split(";")
         ])
 
     def _get_alternatives(self, answer):
