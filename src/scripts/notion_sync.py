@@ -82,7 +82,6 @@ def fetch_new_questions() -> deque:
 
 def get_folder_from_page(page) -> str:
     props = page["properties"]
-    print(props)
     folder_prop = props.get("Topic", {})
 
     return folder_prop["select"]["name"]
