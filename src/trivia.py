@@ -2,7 +2,6 @@ from pathlib import Path
 import random
 import string
 
-from IPython.display import clear_output
 from thefuzz import fuzz
 
 from sqlite_functions import load_topic
