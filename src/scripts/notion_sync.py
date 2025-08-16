@@ -126,12 +126,14 @@ def main():
     if not new_questions:
         print("ℹ️ No new questions to sync.")
     else:
+        total = 0
         while new_questions:
             item = new_questions.popleft()
 
             insert_question(item.topic, item.question, item.answer)
+            total += 1
 
-        print("✅ All new questions synced and saved.")
+        print(f"✅ {total} new questions synced and saved.")
 
     # Now double-check if everything is synced
     all_synced = check_all_synced()
