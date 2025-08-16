@@ -105,6 +105,6 @@ def check_for_duplicates() -> list:
                        FROM questions
                        GROUP BY answer
                        HAVING COUNT(*) > 1""")
-        rows = cursor.fetchall
-    # Fix stuff here
+        rows = cursor.fetchall()
+
     return rows
