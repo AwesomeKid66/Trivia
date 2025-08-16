@@ -4,8 +4,7 @@ import string
 
 from thefuzz import fuzz
 
-from sqlite_functions import load_topic
-
+import sqlite_functions as sqlf
 
 class TriviaGame:
     """
@@ -36,7 +35,7 @@ class TriviaGame:
         source : str
             Filename (in the directory) to load questions from. Default is 'all_questions.json'.
         """
-        questions = load_topic(topic)
+        questions = sqlf.load_topic(topic)
         if not questions:
             print(f"No questions found for {topic}. Please add some first!")
             return
