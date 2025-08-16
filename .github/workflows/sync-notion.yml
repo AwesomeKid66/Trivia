@@ -38,10 +38,15 @@ jobs:
         run: |
           python src/scripts/notion_sync.py
 
-      - name: Commit & push changes if any
+      - name: Commit changes
         run: |
           git config --global user.name 'github-actions'
           git config --global user.email 'github-actions@github.com'
           git add data/database.db
           git diff --cached --quiet || git commit -m "📥 Sync Notion questions"
-          git push
+
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: main
