@@ -6,6 +6,7 @@ from thefuzz import fuzz
 
 import sqlite_functions as sqlf
 
+
 class TriviaGame:
     """
     A class to manage, store, and run trivia quizzes from SQLite database.
