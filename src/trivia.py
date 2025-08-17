@@ -4,7 +4,7 @@ import string
 
 from thefuzz import fuzz
 
-import sqlite_functions as sqlf
+import sqlite_functions.basic_functions as sqlf
 
 
 class TriviaGame:
