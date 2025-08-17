@@ -15,16 +15,15 @@ def insert_question(topic: str, question: str, answer: str) -> None:
         topic (str): The topic/category of the question.
         question (str): The trivia question text.
         answer (str): The correct answer.
-        got_wrong (int): Number of times answered wrong (default 0).
         db_file (str): Path to SQLite database file.
     """
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
     cursor.execute("""
-        INSERT INTO questions (topic, question, answer, got_wrong)
-        VALUES (?, ?, ?, ?)
-    """, (topic, question, answer, 0))
+        INSERT INTO questions (topic, question, answer)
+        VALUES (?, ?, ?)
+    """, (topic, question, answer))
 
     conn.commit()
     conn.close()
