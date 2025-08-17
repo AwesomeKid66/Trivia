@@ -1,5 +1,9 @@
+from collections import deque
 from pathlib import Path
 import sqlite3
+
+import numpy as np
+from sentence_transformers import SentenceTransformer, util
 
 DB_PATH = Path(__file__).parent.parent / "data" / "database.db"
 
@@ -25,23 +29,39 @@ def insert_question(topic: str, question: str, answer: str) -> None:
     conn.commit()
     conn.close()
 
-def delete_question(id: int) -> list:
+def delete_questions(ids: int | list[int]) -> None:
     """
-    Deletes a trivia question from the database
+    Deletes one or more trivia questions from the database.
 
     Args:
-        id (int): The id of the item to delete
+        ids (int | list[int]): The id(s) of the item(s) to delete
     """
+    if isinstance(ids, int):
+        ids = [ids]  # wrap single int in a list
+
     with sqlite3.connect(DB_PATH) as conn:
         cursor = conn.cursor()
 
-        cursor.execute("SELECT * FROM questions WHERE id=?", (id,))
-        row = cursor.fetchone()
+        for qid in ids:
+            cursor.execute("SELECT * FROM questions WHERE id=?", (qid,))
+            row = cursor.fetchone()
 
-        user_input = input(f"Is this the question and answer you would like to delete(y/n)?\nQuestion: {row[2]}\nAnswer: {row[3]}\n")
-        if user_input.lower().strip() == "n":
-            return
-        cursor.execute("DELETE FROM questions WHERE id=?", (id,))
+            if not row:
+                print(f"No question found with id={qid}")
+                continue
+
+            user_input = input(
+                f"Delete this question (id={qid})?\n"
+                f"Question: {row[2]}\n"
+                f"Answer: {row[3]}\n"
+                f"(y/n): "
+            )
+
+            if user_input.lower().strip() == "y":
+                cursor.execute("DELETE FROM questions WHERE id=?", (qid,))
+                print(f"Deleted question id={qid}")
+            else:
+                print(f"Skipped question id={qid}")
 
         conn.commit()
 
@@ -93,18 +113,116 @@ def load_topic(topic: str) -> list:
 
     return rows
 
-def check_for_duplicates() -> list:
+def normalize_text(x: str) -> str:
+    return (x or "").strip().casefold()
+
+def check_for_duplicates(topic: str, threshold: float = 0.8) -> list:
     """
-    Checks if there are any possible duplicate questions/answer in the database.
-    Currently just checks if the answers are the same and flags if they are
+    Find groups of semantically similar questions in the database for a given topic.
+
+    Args:
+        topic (str): The topic to filter questions on.
+        threshold (float): Cosine similarity threshold (0-1). Default=0.8
+
+    Returns:
+        list of clusters, where each cluster is a list of dicts with id/question/answer
     """
+    model = SentenceTransformer("all-MiniLM-L6-v2")
+
+    with sqlite3.connect(DB_PATH) as conn:
+        cursor = conn.cursor()
+        cursor.execute(
+            "SELECT id, question, answer FROM questions WHERE topic = ?",
+            (topic,),
+        )
+        rows = cursor.fetchall()
+
+    if not rows:
+        print(f"No questions found for topic: {topic}")
+        return []
+
+    ids = [row[0] for row in rows]
+    questions = [row[1] for row in rows]
+    answers = [row[2] for row in rows]
+
+    # Compute embeddings (normalized so dot = cosine similarity)
+    embeddings = model.encode(questions, normalize_embeddings=True)
+    embeddings = np.asarray(embeddings, dtype=np.float32)
+
+    # Cosine similarity matrix
+    sim_matrix = embeddings @ embeddings.T
+    n = len(rows)
+
+    # Build adjacency graph
+    adj = [[] for _ in range(n)]
+    for i in range(n):
+        for j in range(i + 1, n):
+            score = float(sim_matrix[i, j])
+            if score >= threshold:
+                adj[i].append(j)
+                adj[j].append(i)
+
+    # Find connected components (clusters)
+    visited = [False] * n
+    clusters = []
+    for i in range(n):
+        if visited[i] or not adj[i]:
+            continue
+        comp = []
+        q = deque([i])
+        visited[i] = True
+        while q:
+            u = q.popleft()
+            comp.append({
+                "id": ids[u],
+                "question": questions[u],
+                "answer": answers[u],
+            })
+            for v in adj[u]:
+                if not visited[v]:
+                    visited[v] = True
+                    q.append(v)
+        if len(comp) >= 2:  # only keep real clusters
+            clusters.append(comp)
+
+    # Print clusters for review
+    for ci, comp in enumerate(clusters, start=1):
+        print(f"\n=== Cluster {ci} (size={len(comp)}) ===")
+        for item in comp:
+            print(f"[{item['id']}] Q: {item['question']} | A: {item['answer']}")
+
+    return clusters
+
+
+def remove_column() -> None:
+
     with sqlite3.connect(DB_PATH) as conn:
         cursor = conn.cursor()
 
-        cursor.execute("""SELECT answer, COUNT(*) AS count"
-                       FROM questions
-                       GROUP BY answer
-                       HAVING COUNT(*) > 1""")
-        rows = cursor.fetchall()
+        # 1. Rename the old table
+        cursor.execute("ALTER TABLE questions RENAME TO questions_old;")
 
-    return rows
+        # 2. Create a new table without the 'got_wrong' column
+        cursor.execute("""
+            CREATE TABLE questions (
+                id INTEGER PRIMARY KEY,
+                topic TEXT,
+                question TEXT,
+                answer TEXT
+            );
+        """)
+
+        # 3. Copy the data over (excluding got_wrong)
+        cursor.execute("""
+            INSERT INTO questions (id, topic, question, answer)
+            SELECT id, topic, question, answer FROM questions_old;
+        """)
+
+        # 4. Drop the old table
+        cursor.execute("DROP TABLE questions_old;")
+
+        conn.commit()
+
+if __name__ == "__main__":
+    # check_for_duplicates("Stranger Things", threshold=0.6)
+    delete_questions([1,199,306,244])
