@@ -27,7 +27,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install python-dotenv notion-client numpy sentence-transformers
+          pip install python-dotenv notion-client
 
       - name: Run sync script
         env:

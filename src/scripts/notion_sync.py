@@ -14,7 +14,7 @@ project_root = Path(__file__).resolve().parent.parent.parent  # up from src/scri
 if str(project_root) not in sys.path:
     sys.path.insert(0, str(project_root))
 
-from src.sqlite_functions import insert_question  # noqa: E402
+from src.sqlite_functions.basic_functions import insert_question  # noqa: E402
 
 
 @dataclass
