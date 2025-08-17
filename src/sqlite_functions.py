@@ -3,7 +3,7 @@ from pathlib import Path
 import sqlite3
 
 import numpy as np
-from sentence_transformers import SentenceTransformer, util
+from sentence_transformers import SentenceTransformer
 
 DB_PATH = Path(__file__).parent.parent / "data" / "database.db"
 
