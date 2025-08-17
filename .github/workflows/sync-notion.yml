@@ -27,11 +27,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          if [ -f pyproject.toml ]; then
-            pip install .
-          else
-            echo "No pyproject.toml found — skipping install"
-          fi
+          pip install python-dotenv notion-client
 
       - name: Run sync script
         env:
