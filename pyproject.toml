@@ -8,6 +8,7 @@ dependencies = [
     "auto-mix-prep>=0.2.0",
     "notion-client>=2.4.0",
     "python-dotenv>=1.1.0",
+    "sentence-transformers>=5.1.0",
     "thefuzz>=0.22.1",
 ]
 
