@@ -9,12 +9,11 @@ import sqlite_functions.basic_functions as sqlf
 
 class TriviaGame:
     """
-    A class to manage, store, and run trivia quizzes from SQLite database.
+    A class to run trivia quizzes from SQLite database.
 
     Features:
         - Interactive question adding
         - Fuzzy answer matching
-        - Learning mode that removes mastered questions
     """
 
     def __init__(self):
@@ -34,7 +33,7 @@ class TriviaGame:
         Parameters
         ----------
         source : str
-            Filename (in the directory) to load questions from. Default is 'all_questions.json'.
+            Filename (in the directory) to load questions from.
         """
         questions = sqlf.load_topic(topic)
         if not questions:

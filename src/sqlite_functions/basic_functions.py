@@ -24,6 +24,7 @@ def insert_question(topic: str, question: str, answer: str) -> None:
     conn.commit()
     conn.close()
 
+
 def delete_questions(ids: int | list[int]) -> None:
     """
     Deletes one or more trivia questions from the database.
@@ -109,6 +110,44 @@ def load_topic(topic: str) -> list:
     return rows
 
 
+def modify_entry(id: int, field: str) -> None:
+    """Modify either the question or answer for a given ID interactively.
+
+    Args:
+        qid: The ID of the question to update.
+        field: Either "question" or "answer".
+    """
+    if field not in ("question", "answer"):
+        raise ValueError("field must be either 'question' or 'answer'")
+
+    with sqlite3.connect(DB_PATH) as conn:
+        cursor = conn.cursor()
+
+        # Fetch current value
+        cursor.execute(f"SELECT {field} FROM questions WHERE id = ?", (id,))  # noqa: S608
+        row = cursor.fetchone()
+
+        if not row:
+            print(f"No entry found with id {id}")
+            return
+
+        current_value = row[0]
+        print(f"Current {field}: {current_value}")
+
+        confirm = input(f"Would you like to change this {field}? (y/n): ").strip().lower()
+        if confirm != "y":
+            print("No changes made.")
+            return
+
+        # Ask for new value
+        new_value = input(f"Enter new {field}: ").strip()
+
+        cursor.execute(f"UPDATE questions SET {field} = ? WHERE id = ?", (new_value, id))  # noqa: S608
+        conn.commit()
+
+        print(f"{field.capitalize()} updated successfully.")
+
+
 if __name__ == "__main__":
     # check_for_duplicates("Stranger Things", threshold=0.6)
-    delete_questions([1,199,306,244])
+    modify_entry(321, "question")
