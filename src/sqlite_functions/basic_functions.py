@@ -1,6 +1,6 @@
+import argparse
 from pathlib import Path
 import sqlite3
-import argparse
 
 DB_PATH = Path(__file__).parent.parent.parent / "data" / "database.db"
 
