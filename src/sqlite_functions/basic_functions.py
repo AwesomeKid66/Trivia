@@ -1,5 +1,6 @@
 from pathlib import Path
 import sqlite3
+import argparse
 
 DB_PATH = Path(__file__).parent.parent.parent / "data" / "database.db"
 
@@ -149,5 +150,13 @@ def modify_entry(id: int, field: str) -> None:
 
 
 if __name__ == "__main__":
-    # check_for_duplicates("Stranger Things", threshold=0.6)
-    modify_entry(321, "question")
+    parser = argparse.ArgumentParser(description="Modify a question or answer in the database.")
+    parser.add_argument("id", type=int, help="ID of the question to modify")
+    parser.add_argument("field", choices=["question", "answer"], help="Field to modify")
+    parser.add_argument("--value", "-v", type=str, help="New value (optional, otherwise interactive)")
+
+    args = parser.parse_args()
+    if args.value:
+        modify_entry(args.id, args.field, args.value)  # non-interactive
+    else:
+        modify_entry(args.id, args.field)  # interactive
