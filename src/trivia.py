@@ -51,7 +51,11 @@ class TriviaGame:
             if ";" in answer:
                 print("(Separate answers with a semicolon ';')")
 
-            user_answer = input("Your answer: (Type 'exit' to stop quiz) ").lower().strip()
+            try:
+                user_answer = input("Your answer: (Type 'exit' to stop quiz) ").lower().strip()
+            except EOFError:
+                user_answer = ""
+
             if user_answer == "exit":
                 break
 

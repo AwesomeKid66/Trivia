@@ -33,22 +33,569 @@
     {
       "id": "vblA",
       "code_hash": "8159d6e64d2273bcce910946c536b4a3",
-      "outputs": [],
+      "outputs": [
+        {
+          "type": "error",
+          "ename": "exception",
+          "evalue": "EOF when reading a line",
+          "traceback": []
+        }
+      ],
       "console": [
         {
           "type": "stream",
           "name": "stdout",
-          "text": "\nQuestion 1: Who is the last person to see Will before he disappears?\nYour answer: (Type 'exit' to stop quiz) "
+          "text": "\nQuestion 1: What is the name of the Russian scientist who loves cherry Slurpees?\nYour answer: (Type 'exit' to stop quiz) "
         },
         {
           "type": "stream",
           "name": "stdout",
-          "text": " Mike\n"
+          "text": " \n"
         },
         {
           "type": "stream",
           "name": "stdout",
-          "text": "\u001b[2K\r\u001b[2K\rInCorrect :(.  ANSWER: Dustin\n\nQuestion 2: What color is the Byers family car in the earlier seasons?\nYour answer: (Type 'exit' to stop quiz) "
+          "text": "InCorrect :(.  ANSWER: Alexei\n\nQuestion 2: What is the name of the van of the people that are planting bugs around Hawkins\nYour answer: (Type 'exit' to stop quiz) "
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " Hawkins Power and Lighting\n"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "InCorrect :(.  ANSWER: Power and Light\n\nQuestion 3: What was the name of the newspaper where Nancy and Jonathan worked?\nYour answer: (Type 'exit' to stop quiz) "
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " \n"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "InCorrect :(.  ANSWER: The Hawkins Post\n\nQuestion 4: In D&D who is El?\nYour answer: (Type 'exit' to stop quiz) "
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " Mage\n"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "Correct! \ud83c\udf89   ANSWER: Mage\n\nQuestion 5: What did Joyce get Will for his 8th birthday?\nYour answer: (Type 'exit' to stop quiz) "
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " 120 crayons\n"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "Correct! \ud83c\udf89   ANSWER: 120 crayons\n\nQuestion 6: Who first goes inside the Upside Down?\nYour answer: (Type 'exit' to stop quiz) "
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " Will\n"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "InCorrect :(.  ANSWER: Shepard\n\nQuestion 7: What is the name of Dustin\u2019s turtle\nYour answer: (Type 'exit' to stop quiz) "
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " Yertle\n"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "Correct! \ud83c\udf89   ANSWER: Yertle\n\nQuestion 8: What is the name of Chapter 6?\nYour answer: (Type 'exit' to stop quiz) "
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " \n"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "InCorrect :(.  ANSWER: The monster\n\nQuestion 9: A poster of what song is shown on Will's bedroom wall in Lenora?\nYour answer: (Type 'exit' to stop quiz) "
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " \n"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "InCorrect :(.  ANSWER: Boys Don't Cry by The Cure\n\nQuestion 10: What is the D&D name for the Upside Down?\nYour answer: (Type 'exit' to stop quiz) "
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " The Nether\n"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "InCorrect :(.  ANSWER: Vale of Shadows\n\nQuestion 11: What subject does Mr. Clarke teach?\nYour answer: (Type 'exit' to stop quiz) "
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " Science\n"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "Correct! \ud83c\udf89   ANSWER: Science\n\nQuestion 12: How many days does Mike call El on the Superconm?\nYour answer: (Type 'exit' to stop quiz) "
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " 353\n"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "Correct! \ud83c\udf89   ANSWER: 353\n\nQuestion 13: What is the name of Chapter 4?\nYour answer: (Type 'exit' to stop quiz) "
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " \n"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "InCorrect :(.  ANSWER: The Body\n\nQuestion 14: How long has it been since Terry Ives daughter was taken?\nYour answer: (Type 'exit' to stop quiz) "
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " 12 years\n"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "Correct! \ud83c\udf89   ANSWER: 12 years\n\nQuestion 15: What does Dustin feed D'artagnan?\nYour answer: (Type 'exit' to stop quiz) "
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " 3 Musketeers\n"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "Correct! \ud83c\udf89   ANSWER: 3 Musketeers (Nougat)\n\nQuestion 16: What is the name of the government assassin who chases Eleven in Season 4?\nYour answer: (Type 'exit' to stop quiz) "
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " \n"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "InCorrect :(.  ANSWER: Lt. Colonel Jack Sullivan\n\nQuestion 17: What is the name of Dustin's cat?\nYour answer: (Type 'exit' to stop quiz) "
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " Mews\n"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "Correct! \ud83c\udf89   ANSWER: Mews\n\nQuestion 18: What is the name of everyone is Kali's gang?\n(Separate answers with a semicolon ';')\nYour answer: (Type 'exit' to stop quiz) "
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " Funshine; Mick; Dottie; Axel\n"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "Correct! \ud83c\udf89   ANSWER: Axel; Funshine; Mick; Dottie\n\nQuestion 19: What is the name of Jim Hopper's adopted daughter?\nYour answer: (Type 'exit' to stop quiz) "
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " Jane\n"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "InCorrect :(.  ANSWER: Eleven (Jane Hopper)\n\nQuestion 20: What is the name of Chapter 8?\nYour answer: (Type 'exit' to stop quiz) "
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " \n"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "InCorrect :(.  ANSWER: The Upside Down\n\nQuestion 21: Which two original Party members live the closest (distance wise)?\nYour answer: (Type 'exit' to stop quiz) "
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " Mike and Lucas\n"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "Correct! \ud83c\udf89   ANSWER: Mike and Lucas\n\nQuestion 22: What does Will tell everyone through Morse Code?\nYour answer: (Type 'exit' to stop quiz) "
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " Close Gate\n"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "Correct! \ud83c\udf89   ANSWER: Close Gate\n\nQuestion 23: When is Will's birthday?\nYour answer: (Type 'exit' to stop quiz) "
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " March 22\n"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "Correct! \ud83c\udf89   ANSWER: March 22\n\nQuestion 24: What date is the Snow Ball dance in S2?\nYour answer: (Type 'exit' to stop quiz) "
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " December 15, 1983\n"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "Correct! \ud83c\udf89   ANSWER: December 15, 1984\n\nQuestion 25: Who writes for the Hawkins Post?\nYour answer: (Type 'exit' to stop quiz) "
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " \n"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "InCorrect :(.  ANSWER: Nancy\n\nQuestion 26: What are the facts the boys give about El to hide her in Hawkins Middle School?\n(Separate answers with a semicolon ';')\nYour answer: (Type 'exit' to stop quiz) "
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " cousin; from Sweden; Elanor\n"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "InCorrect :(.  ANSWER: Eleanor; Sweden, Second Cousin\n\nQuestion 27: What's the name of Hopper's ex-wife?\nYour answer: (Type 'exit' to stop quiz) "
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " Diance\n"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "Correct! \ud83c\udf89   ANSWER: Diane\n\nQuestion 28: What is the name of Dustin's mom?\nYour answer: (Type 'exit' to stop quiz) "
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " \n"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "InCorrect :(.  ANSWER: Claudia\n\nQuestion 29: What temperature was Will when he was possessed by the Mind Flayer?\nYour answer: (Type 'exit' to stop quiz) "
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " 95\n"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "Correct! \ud83c\udf89   ANSWER: 95\n\nQuestion 30: What memory does Joyce share with a possessed Will in an attempt to get through to him?\nYour answer: (Type 'exit' to stop quiz) "
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " birthday\n"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "InCorrect :(.  ANSWER: Him offering a crying little girl his toy truck\n\nQuestion 31: What do Karen and Ted Wheeler do with Holly at the 4th of July fair?\nYour answer: (Type 'exit' to stop quiz) "
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " \n"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "InCorrect :(.  ANSWER: Ride the Ferris Wheel\n\nQuestion 32: Where do they build the sensory deprivation tank?\nYour answer: (Type 'exit' to stop quiz) "
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " Gymnasium\n"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "InCorrect :(.  ANSWER: In the school gymnasium\n\nQuestion 33: When did Mike tell El to meet them by the powerlines after school?\nYour answer: (Type 'exit' to stop quiz) "
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " 3:15\n"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "Correct! \ud83c\udf89   ANSWER: 3:15\n\nQuestion 34: What is Hopper's nickname for Bob Newby\nYour answer: (Type 'exit' to stop quiz) "
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " Bob the Brain\n"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "Correct! \ud83c\udf89   ANSWER: Bob the Brain\n\nQuestion 35: What is Jonathan Byers passionate about?\nYour answer: (Type 'exit' to stop quiz) "
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " Photography\n"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "Correct! \ud83c\udf89   ANSWER: Photography\n\nQuestion 36: Who is Dr. Brenner also known as?\nYour answer: (Type 'exit' to stop quiz) "
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " \n"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "InCorrect :(.  ANSWER: Papa\n\nQuestion 37: Who did Will do his history project on for Mrs. Gracey's class?\nYour answer: (Type 'exit' to stop quiz) "
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " j\n"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "InCorrect :(.  ANSWER: Alan Turing\n\nQuestion 38: What movie did Joyce take Will to see?\nYour answer: (Type 'exit' to stop quiz) "
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " Poltergeist\n"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "Correct! \ud83c\udf89   ANSWER: Poltergeist\n\nQuestion 39: What commercial does El watch on the tv in Mike's house\nYour answer: (Type 'exit' to stop quiz) "
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " Coca Cola\n"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "Correct! \ud83c\udf89   ANSWER: Coca-cola\n\nQuestion 40: What is the password to the Byer's Castle?\nYour answer: (Type 'exit' to stop quiz) "
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " Radagast\n"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "Correct! \ud83c\udf89   ANSWER: Radagast\n\nQuestion 41: What are the names of Hopper's two cops?\nYour answer: (Type 'exit' to stop quiz) "
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " \n"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "InCorrect :(.  ANSWER: Calvin and Phil\n\nQuestion 42: What does Terry Ives mumble?\n(Separate answers with a semicolon ';')\nYour answer: (Type 'exit' to stop quiz) "
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " Breathe; Sunflower; Rainbow; \n"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "InCorrect :(.  ANSWER: Breath; Sunflower; Rainbow; Four-Fifty\n\nQuestion 43: What is Mr. Clarke's girlfriend's name?\nYour answer: (Type 'exit' to stop quiz) "
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " Jen\n"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "Correct! \ud83c\udf89   ANSWER: Jen\n\nQuestion 44: Who is spray painting, rude comments about Nancy\nYour answer: (Type 'exit' to stop quiz) "
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " Tommy\n"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "Correct! \ud83c\udf89   ANSWER: Tommy\n\nQuestion 45: What is the name of the store that Nancy and Jonathan buy supplies from?\nYour answer: (Type 'exit' to stop quiz) "
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " \n"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "InCorrect :(.  ANSWER: Hunting and Camping\n\nQuestion 46: What does 11 learn in the sensory deprivation tank first?\nYour answer: (Type 'exit' to stop quiz) "
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " \n"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "InCorrect :(.  ANSWER: Barbara is gone\n\nQuestion 47: Who does Dustin compare the police chief to when they are arguing in the bus?\nYour answer: (Type 'exit' to stop quiz) "
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " \n"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "InCorrect :(.  ANSWER: Lando Calrissian\n\nQuestion 48: Where does Stranger Things take place?\nYour answer: (Type 'exit' to stop quiz) "
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " Hawkins Indiana\n"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "Correct! \ud83c\udf89   ANSWER: Hawkins, Indiana\n\nQuestion 49: Who is the second person taken by the monster?\nYour answer: (Type 'exit' to stop quiz) "
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " Barb Holland\n"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "Correct! \ud83c\udf89   ANSWER: Barb Holland\n\nQuestion 50: What is the name of Chapter 3?\nYour answer: (Type 'exit' to stop quiz) "
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " \n"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "InCorrect :(.  ANSWER: Holly, Jolly\n\nQuestion 51: What is Will's DnD name?\nYour answer: (Type 'exit' to stop quiz) "
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " Will the Wise\n"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "Correct! \ud83c\udf89   ANSWER: Will the Wise\n\nQuestion 52: What is the name that the boys give the road that Will headed home on before he went missing?\nYour answer: (Type 'exit' to stop quiz) "
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " Mirkwood\n"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "Correct! \ud83c\udf89   ANSWER: Mirkwood\n\nQuestion 53: Where did they find Will in the Upside Down?\nYour answer: (Type 'exit' to stop quiz) "
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " Public Library\n"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "Correct! \ud83c\udf89   ANSWER: The Public Library\n\nQuestion 54: What store does El get Eggo from?\nYour answer: (Type 'exit' to stop quiz) "
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " \n"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "InCorrect :(.  ANSWER: Bradley's Big Buy\n\nQuestion 55: What is the name of S2.C4?\nYour answer: (Type 'exit' to stop quiz) "
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": " \n"
+        },
+        {
+          "type": "stream",
+          "name": "stdout",
+          "text": "InCorrect :(.  ANSWER: Will the Wise\n\nQuestion 56: What is the code name for the Russian project in Season 3?\nYour answer: (Type 'exit' to stop quiz) "
         },
         {
           "type": "stream",
