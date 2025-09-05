@@ -16,5 +16,5 @@ class Question(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'questions'
-        app_label = 'trivia_app'
+        db_table = "questions"
+        app_label = "trivia_app"

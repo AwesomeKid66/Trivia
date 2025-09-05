@@ -1,12 +1,14 @@
+import random
+
 from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-from django.views.decorators.csrf import csrf_exempt
 
 # Import your Question model
 from .models import Question
-import random
+
 
 # Home page template
 def index(request):
@@ -37,7 +39,7 @@ def check_answer(request, qid):
 @api_view(["GET"])
 @permission_classes([AllowAny])
 def get_topics(request):
-    topics = Question.objects.values_list('topic', flat=True).distinct()
+    topics = Question.objects.values_list("topic", flat=True).distinct()
     return Response(sorted(list(topics)))
 
 # Return all questions in a topic (randomized)
