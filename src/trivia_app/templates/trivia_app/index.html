@@ -2,7 +2,7 @@
 <div id="question-container" style="display:none;">
   <p id="question-text"></p>
   <button id="reveal-answer">Reveal Answer</button>
-  <p id="answer-text" style="display:none;"></p>
+  <p id="answer-text" style="visibility:hidden; margin:0;"></p>
   <button id="next-question">Next Question</button>
 </div>
 
@@ -34,7 +34,6 @@ async function startTopic(topic) {
   showQuestion();
 }
 
-// Show a question
 function showQuestion() {
   if (currentIndex >= questions.length) {
     alert("No more questions!");
@@ -45,12 +44,14 @@ function showQuestion() {
   const q = questions[currentIndex];
   document.getElementById("question-text").textContent = q.question;
   document.getElementById("answer-text").textContent = q.answer;
-  document.getElementById("answer-text").style.display = "none";
+
+  // hide answer at start
+  document.getElementById("answer-text").style.visibility = "hidden";
 }
 
 // Reveal answer button
 document.getElementById("reveal-answer").onclick = () => {
-  document.getElementById("answer-text").style.display = "block";
+  document.getElementById("answer-text").style.visibility = "visible";
 };
 
 // Next question button
@@ -58,6 +59,7 @@ document.getElementById("next-question").onclick = () => {
   currentIndex++;
   showQuestion();
 };
+
 
 loadTopics();
 </script>
