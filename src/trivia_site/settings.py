@@ -86,7 +86,7 @@ WSGI_APPLICATION = "trivia_site.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": (BASE_DIR.parent / "data" / "database.db"),  # adjust path to your file
+        "NAME": (BASE_DIR / "data" / "database.db"),  # adjust path to your file
     }
 }
 
