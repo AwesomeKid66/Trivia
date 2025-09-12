@@ -18,9 +18,9 @@ def insert_question(topic: str, question: str, answer: str) -> None:
     cursor = conn.cursor()
 
     cursor.execute("""
-        INSERT INTO questions (topic, question, answer)
-        VALUES (?, ?, ?)
-    """, (topic, question, answer))
+        INSERT INTO questions (topic, question, answer, likelihood)
+        VALUES (?, ?, ?, ?)
+    """, (topic, question, answer, 3))
 
     conn.commit()
     conn.close()
@@ -148,15 +148,22 @@ def modify_entry(id: int, field: str) -> None:
 
         print(f"{field.capitalize()} updated successfully.")
 
+def add_likelihood_column():
+    with sqlite3.connect(DB_PATH) as conn:
+        cursor = conn.cursor()
+        cursor.execute("ALTER TABLE questions ADD COLUMN likelihood INTEGER DEFAULT 3")
+        conn.commit()
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Modify a question or answer in the database.")
-    parser.add_argument("id", type=int, help="ID of the question to modify")
-    parser.add_argument("field", choices=["question", "answer"], help="Field to modify")
-    parser.add_argument("--value", "-v", type=str, help="New value (optional, otherwise interactive)")
+    # parser = argparse.ArgumentParser(description="Modify a question or answer in the database.")
+    # parser.add_argument("id", type=int, help="ID of the question to modify")
+    # parser.add_argument("field", choices=["question", "answer"], help="Field to modify")
+    # parser.add_argument("--value", "-v", type=str, help="New value (optional, otherwise interactive)")
 
-    args = parser.parse_args()
-    if args.value:
-        modify_entry(args.id, args.field, args.value)  # non-interactive
-    else:
-        modify_entry(args.id, args.field)  # interactive
+    # args = parser.parse_args()
+    # if args.value:
+    #     modify_entry(args.id, args.field, args.value)  # non-interactive
+    # else:
+    #     modify_entry(args.id, args.field)  # interactive
+    add_likelihood_column()
+

@@ -88,5 +88,53 @@ def check_for_duplicates(topic: str, threshold: float = 0.6) -> list:
 
     return clusters
 
+def set_likelihood(question_id: int, likelihood: int):
+    """Update likelihood for a specific question."""
+    if likelihood < 1 or likelihood > 5:
+        raise ValueError("Likelihood must be between 1 and 5")
+    with sqlite3.connect(DB_PATH) as conn:
+        cursor = conn.cursor()
+        cursor.execute(
+            "UPDATE questions SET likelihood = ? WHERE id = ?",
+            (likelihood, question_id),
+        )
+        conn.commit()
+
+def interactive_update_likelihood(topic: str):
+    """Loop through questions in a topic and let user set likelihood."""
+    with sqlite3.connect(DB_PATH) as conn:
+        cursor = conn.cursor()
+        cursor.execute(
+            """
+            SELECT id, question, answer, likelihood
+            FROM questions
+            WHERE topic = ?
+            ORDER BY id ASC
+            """,
+            (topic,),
+        )
+        rows = cursor.fetchall()
+
+    for qid, question, answer, likelihood in rows:
+        print("\n--------------------------------------")
+        print(f"Q: {question}")
+        print(f"A: {answer}")
+        print(f"Current likelihood: {likelihood if likelihood else 'not set'}")
+
+        while True:
+            try:
+                new_val = input("Enter likelihood (1–5, Enter to skip): ").strip()
+                if not new_val:  # skip
+                    break
+                new_val = int(new_val)
+                if 1 <= new_val <= 5:
+                    set_likelihood(qid, new_val)
+                    print(f"Updated likelihood to {new_val}")
+                    break
+                else:
+                    print("⚠️ Please enter a number between 1 and 5.")
+            except ValueError:
+                print("⚠️ Invalid input. Try again.")
+
 if __name__ == "__main__":
-    check_for_duplicates("Marvel")
+    interactive_update_likelihood("Stranger Things")
