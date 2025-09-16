@@ -13,6 +13,7 @@ class Question(models.Model):
     topic = models.TextField(blank=True, null=True)
     question = models.TextField(blank=True, null=True)
     answer = models.TextField(blank=True, null=True)
+    likelihood = models.IntegerField(blank=True, null=True)
 
     class Meta:
         managed = False

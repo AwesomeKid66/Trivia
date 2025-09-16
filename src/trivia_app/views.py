@@ -18,7 +18,7 @@ def index(request):
 @api_view(["GET"])
 @permission_classes([AllowAny])
 def get_questions(request):
-    data = [{"id": q.id, "question": getattr(q, "question", str(q)), "answer": getattr(q, "answer", "")}
+    data = [{"id": q.id, "question": getattr(q, "question", str(q)), "answer": getattr(q, "answer", ""), "likelihood": getattr(q, "likelihood", 0)}
             for q in Question.objects.all()]
     return Response(data)
 
@@ -48,5 +48,5 @@ def get_topics(request):
 def get_questions_by_topic(request, topic_name):
     qs = list(Question.objects.filter(topic=topic_name))
     random.shuffle(qs)
-    data = [{"id": q.id, "question": q.question, "answer": q.answer} for q in qs]
+    data = [{"id": q.id, "question": q.question, "answer": q.answer, "likelihood": q.likelihood} for q in qs]
     return Response(data)

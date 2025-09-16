@@ -153,17 +153,57 @@ def add_likelihood_column():
         cursor.execute("ALTER TABLE questions ADD COLUMN likelihood INTEGER DEFAULT 3")
         conn.commit()
 
+def list_questions():
+    """List all questions in the database."""
+    topics = get_unique_topics()
+    for topic in topics:
+        print(f"\n--- Topic: {topic} ---")
+        questions = load_topic(topic)
+        for q in questions:
+            print(f"ID: {q[0]} | Q: {q[2]} | A: {q[3]} | Likelihood: {q[4]}")
+
+def interactive_menu():
+    while True:
+        print("\n=== Trivia Database Manager ===")
+        print("1. List all questions")
+        print("2. Add a question")
+        print("3. Delete question(s)")
+        print("4. Modify question or answer")
+        print("5. Quit")
+
+        choice = input("Choose an option: ").strip()
+
+        if choice == "1":
+            list_questions()
+
+        elif choice == "2":
+            add_question()
+
+        elif choice == "3":
+            ids_str = input("Enter question ID(s) to delete (comma separated): ")
+            try:
+                ids = [int(x.strip()) for x in ids_str.split(",")]
+                delete_questions(ids)
+            except ValueError:
+                print("Invalid input. Please enter integer IDs separated by commas.")
+
+        elif choice == "4":
+            try:
+                qid = int(input("Enter the question ID to modify: "))
+                field = input("Modify 'question' or 'answer'? ").strip().lower()
+                if field not in ("question", "answer"):
+                    print("Invalid field. Must be 'question' or 'answer'.")
+                    continue
+                modify_entry(qid, field)
+            except ValueError:
+                print("Invalid input. ID must be an integer.")
+
+        elif choice == "5":
+            print("Exiting...")
+            break
+
+        else:
+            print("Invalid choice. Try again.")
+
 if __name__ == "__main__":
-    # import argparse
-    # parser = argparse.ArgumentParser(description="Modify a question or answer in the database.")
-    # parser.add_argument("id", type=int, help="ID of the question to modify")
-    # parser.add_argument("field", choices=["question", "answer"], help="Field to modify")
-    # parser.add_argument("--value", "-v", type=str, help="New value (optional, otherwise interactive)")
-
-    # args = parser.parse_args()
-    # if args.value:
-    #     modify_entry(args.id, args.field, args.value)  # non-interactive
-    # else:
-    #     modify_entry(args.id, args.field)  # interactive
-    add_likelihood_column()
-
+    interactive_menu()

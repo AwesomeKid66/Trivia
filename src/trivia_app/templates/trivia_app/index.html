@@ -38,12 +38,19 @@ async function startTopic(topic) {
   const res = await fetch(`/questions/${encodeURIComponent(topic)}/`);
   const rawQuestions = await res.json();
 
+  console.log("Fetched questions:", rawQuestions);
+
   // Group by likelihood
   const grouped = {};
   rawQuestions.forEach(q => {
-    if (!grouped[q.likelihood]) grouped[q.likelihood] = [];
-    grouped[q.likelihood].push(q);
+    const level = parseInt(q.likelihood, 10); // force to number
+    if (!grouped[level]) grouped[level] = [];
+    grouped[level].push(q);
   });
+
+  console.log("Grouped keys:", Object.keys(grouped));
+
+  console.log("Grouped questions:", grouped);
 
   // Sort by likelihood descending, shuffle each group, then flatten
   questions = [];
@@ -52,6 +59,8 @@ async function startTopic(topic) {
       questions = questions.concat(shuffle(grouped[level]));
     }
   });
+
+  console.log("Final ordered questions:", questions);
 
   currentIndex = 0;
   document.getElementById("topics").style.display = "none";
@@ -88,3 +97,64 @@ document.getElementById("next-question").onclick = () => {
 
 loadTopics();
 </script>
+
+<style>
+/* Container for the entire question section */
+#question-container {
+  max-width: 800px;        /* keeps it readable on large screens */
+  width: 90%;              /* adapts to smaller screens */
+  margin: 20px auto;       /* center it */
+  padding: 15px;
+  box-sizing: border-box;  /* include padding in width */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* Question text */
+#question-text {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+  white-space: normal;     /* allows wrapping */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* Answer text */
+#answer-text {
+  font-size: 1rem;
+  line-height: 1.5;
+  margin-top: 10px;
+  white-space: normal;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* Buttons */
+button {
+  margin-top: 10px;
+  padding: 8px 12px;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+/* Responsive adjustments for small screens */
+@media (max-width: 600px) {
+  #question-container {
+    width: 95%;
+    padding: 10px;
+  }
+
+  #question-text {
+    font-size: 1.1rem;
+  }
+
+  #answer-text {
+    font-size: 0.95rem;
+  }
+
+  button {
+    font-size: 0
+  }
+}
+</style>
