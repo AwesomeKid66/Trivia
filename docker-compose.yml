@@ -9,4 +9,8 @@ services:
       - "8000:8000"
     volumes:
       - ./data:/app/data  # keep SQLite DB persistent
+      - ./src/trivia_app:/app/trivia_app # for live code updates
+      - ./src/trivia_site:/app/trivia_site # for live code updates
+      - ./src/manage.py:/app/manage.py # for live code updates
+
     restart: unless-stopped

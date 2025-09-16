@@ -24,10 +24,35 @@ async function loadTopics() {
   });
 }
 
+// Fisher-Yates shuffle
+function shuffle(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
+
 // Start a topic
 async function startTopic(topic) {
   const res = await fetch(`/questions/${encodeURIComponent(topic)}/`);
-  questions = await res.json();
+  const rawQuestions = await res.json();
+
+  // Group by likelihood
+  const grouped = {};
+  rawQuestions.forEach(q => {
+    if (!grouped[q.likelihood]) grouped[q.likelihood] = [];
+    grouped[q.likelihood].push(q);
+  });
+
+  // Sort by likelihood descending, shuffle each group, then flatten
+  questions = [];
+  [5,4,3,2,1].forEach(level => {
+    if (grouped[level]) {
+      questions = questions.concat(shuffle(grouped[level]));
+    }
+  });
+
   currentIndex = 0;
   document.getElementById("topics").style.display = "none";
   document.getElementById("question-container").style.display = "block";

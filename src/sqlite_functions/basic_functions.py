@@ -154,6 +154,7 @@ def add_likelihood_column():
         conn.commit()
 
 if __name__ == "__main__":
+    # import argparse
     # parser = argparse.ArgumentParser(description="Modify a question or answer in the database.")
     # parser.add_argument("id", type=int, help="ID of the question to modify")
     # parser.add_argument("field", choices=["question", "answer"], help="Field to modify")
