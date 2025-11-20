@@ -1,160 +1,57 @@
-<div id="topics"></div>
-<div id="question-container" style="display:none;">
-  <p id="question-text"></p>
-  <button id="reveal-answer">Reveal Answer</button>
-  <p id="answer-text" style="visibility:hidden; margin:0;"></p>
-  <button id="next-question">Next Question</button>
-</div>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Choose Topic</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 10px;
+        }
 
-<script>
-let questions = [];
-let currentIndex = 0;
+        h1 {
+            text-align: center;
+        }
 
-// Load topics
-async function loadTopics() {
-  const res = await fetch("/topics/");
-  const topics = await res.json();
-  const container = document.getElementById("topics");
-  container.innerHTML = "<h2>Select a topic:</h2>";
-  topics.forEach(topic => {
-    const btn = document.createElement("button");
-    btn.textContent = topic;
-    btn.onclick = () => startTopic(topic);
-    container.appendChild(btn);
-  });
-}
+        ul {
+            list-style: none;
+            padding: 0;
+        }
 
-// Fisher-Yates shuffle
-function shuffle(array) {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
-  return array;
-}
+        li {
+            margin: 10px 0;
+        }
 
-// Start a topic
-async function startTopic(topic) {
-  const res = await fetch(`/questions/${encodeURIComponent(topic)}/`);
-  const rawQuestions = await res.json();
+        button {
+            padding: 10px 15px;
+            font-size: 1rem;
+            cursor: pointer;
+            width: 100%;
+        }
 
-  console.log("Fetched questions:", rawQuestions);
+        @media (max-width: 600px) {
+            button {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Select a Topic</h1>
+    <ul>
+        {% for topic in topics %}
+        <li>
+            <button onclick="startTopic('{{ topic }}')">{{ topic }}</button>
+        </li>
+        {% endfor %}
+    </ul>
 
-  // Group by likelihood
-  const grouped = {};
-  rawQuestions.forEach(q => {
-    const level = parseInt(q.likelihood, 10); // force to number
-    if (!grouped[level]) grouped[level] = [];
-    grouped[level].push(q);
-  });
-
-  console.log("Grouped keys:", Object.keys(grouped));
-
-  console.log("Grouped questions:", grouped);
-
-  // Sort by likelihood descending, shuffle each group, then flatten
-  questions = [];
-  [5,4,3,2,1].forEach(level => {
-    if (grouped[level]) {
-      questions = questions.concat(shuffle(grouped[level]));
-    }
-  });
-
-  console.log("Final ordered questions:", questions);
-
-  currentIndex = 0;
-  document.getElementById("topics").style.display = "none";
-  document.getElementById("question-container").style.display = "block";
-  showQuestion();
-}
-
-function showQuestion() {
-  if (currentIndex >= questions.length) {
-    alert("No more questions!");
-    document.getElementById("topics").style.display = "block";
-    document.getElementById("question-container").style.display = "none";
-    return;
-  }
-  const q = questions[currentIndex];
-  document.getElementById("question-text").textContent = q.question;
-  document.getElementById("answer-text").textContent = q.answer;
-
-  // hide answer at start
-  document.getElementById("answer-text").style.visibility = "hidden";
-}
-
-// Reveal answer button
-document.getElementById("reveal-answer").onclick = () => {
-  document.getElementById("answer-text").style.visibility = "visible";
-};
-
-// Next question button
-document.getElementById("next-question").onclick = () => {
-  currentIndex++;
-  showQuestion();
-};
-
-
-loadTopics();
-</script>
-
-<style>
-/* Container for the entire question section */
-#question-container {
-  max-width: 800px;        /* keeps it readable on large screens */
-  width: 90%;              /* adapts to smaller screens */
-  margin: 20px auto;       /* center it */
-  padding: 15px;
-  box-sizing: border-box;  /* include padding in width */
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-}
-
-/* Question text */
-#question-text {
-  font-size: 1.2rem;
-  font-weight: bold;
-  margin-bottom: 10px;
-  white-space: normal;     /* allows wrapping */
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-}
-
-/* Answer text */
-#answer-text {
-  font-size: 1rem;
-  line-height: 1.5;
-  margin-top: 10px;
-  white-space: normal;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-}
-
-/* Buttons */
-button {
-  margin-top: 10px;
-  padding: 8px 12px;
-  font-size: 1rem;
-  cursor: pointer;
-}
-
-/* Responsive adjustments for small screens */
-@media (max-width: 600px) {
-  #question-container {
-    width: 95%;
-    padding: 10px;
-  }
-
-  #question-text {
-    font-size: 1.1rem;
-  }
-
-  #answer-text {
-    font-size: 0.95rem;
-  }
-
-  button {
-    font-size: 0
-  }
-}
-</style>
+    <script>
+        function startTopic(topic) {
+            // Navigate to the enter-name page for that topic
+            window.location.href = `/study/${encodeURIComponent(topic)}/enter/`;
+        }
+    </script>
+</body>
+</html>

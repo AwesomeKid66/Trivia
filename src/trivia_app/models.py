@@ -9,13 +9,33 @@ from django.db import models
 
 
 class Question(models.Model):
-    id = models.IntegerField(primary_key=True)
+    id = models.AutoField(primary_key=True)
     topic = models.TextField(blank=True, null=True)
     question = models.TextField(blank=True, null=True)
     answer = models.TextField(blank=True, null=True)
-    likelihood = models.IntegerField(blank=True, null=True)
+    likelihood = models.IntegerField(default=3)
 
     class Meta:
-        managed = False
         db_table = "questions"
         app_label = "trivia_app"
+
+
+class Progress(models.Model):
+    STATUS_CHOICES = [
+        ("unanswered", "Unanswered"),
+        ("wrong", "Wrong"),
+        ("correct", "Correct"),
+    ]
+
+    user_name = models.CharField(max_length=100)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, db_column="question_id")
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="unanswered")
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        db_table = "progress"  # table will be created by Django
+        unique_together = ("user_name", "question")
+        app_label = "trivia_app"
+
+    def __str__(self):
+        return f"{self.user_name} - {self.question} ({self.status})"

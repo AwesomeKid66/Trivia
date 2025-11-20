@@ -1,0 +1,6 @@
+<h1>Study: {{ topic }}</h1>
+<form method="get" action="{% url 'study' topic=topic %}">
+    <label for="user">Your Name:</label>
+    <input type="text" name="user" id="user" required>
+    <button type="submit">Start</button>
+</form>

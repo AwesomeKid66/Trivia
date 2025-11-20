@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Study - {{ topic }}</title>
+  <script>
+  let questions = {{ questions|safe }};  // from Django
+  let userName = "{{ user }}";
+  let currentIndex = 0;
+
+  // Group questions by likelihood
+  const grouped = {};
+  questions.forEach(q => {
+      const level = parseInt(q.likelihood, 10) || 0;
+      if (!grouped[level]) grouped[level] = [];
+      grouped[level].push(q);
+  });
+
+  // Sort by likelihood descending, shuffle each group, then flatten
+  function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+  }
+
+  let sortedQuestions = [];
+  [5, 4, 3, 2, 1].forEach(level => {
+      if (grouped[level]) sortedQuestions = sortedQuestions.concat(shuffle(grouped[level]));
+  });
+
+  // Use sortedQuestions as the array to show
+  questions = sortedQuestions;
+
+  console.log("Questions after likelihood ordering:", questions);
+
+  // Show current question
+  function showQuestion() {
+      if (questions.length === 0) {
+          document.getElementById("quiz").innerHTML = "<h2>You're done! 🎉</h2>";
+          return;
+      }
+      const q = questions[currentIndex];
+      document.getElementById("question").innerText = q.question;
+      document.getElementById("answer").innerText = "";
+  }
+
+  // Reveal answer
+  function revealAnswer() {
+      document.getElementById("answer").innerText = questions[currentIndex].answer;
+  }
+
+  // Mark correct/wrong
+  function mark(status) {
+      let qid = questions[currentIndex].id;
+
+      fetch("{% url 'update_progress' %}", {
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json",
+              "X-CSRFToken": getCookie("csrftoken")
+          },
+          body: JSON.stringify({user_name: userName, question_id: qid, status: status})
+      });
+
+      if (status === "correct") {
+          questions.splice(currentIndex, 1);
+          if (currentIndex >= questions.length) currentIndex = 0;
+      } else {
+          currentIndex = (currentIndex + 1) % questions.length;
+      }
+
+      showQuestion();
+  }
+
+  // CSRF helper
+  function getCookie(name) {
+      let value = "; " + document.cookie;
+      let parts = value.split("; " + name + "=");
+      if (parts.length === 2) return parts.pop().split(";").shift();
+  }
+
+  window.onload = showQuestion;
+  </script>
+
+</head>
+<body>
+  <h1>Study Mode: {{ topic }}</h1>
+  <div id="quiz">
+    <p id="question"></p>
+    <p id="answer"></p>
+    <button onclick="revealAnswer()">Show Answer</button>
+    <button onclick="mark('correct')">I got it right</button>
+    <button onclick="mark('wrong')">I got it wrong</button>
+  </div>
+</body>
+</html>
