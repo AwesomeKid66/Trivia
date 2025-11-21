@@ -33,7 +33,7 @@ DB_PATH = Path(__file__).parent.parent / "data" / "database.db"
 
 def fetch_new_questions() -> deque:
     new_questions_per_folder = deque()
-    query_results = notion.databases.query(
+    query_results = notion.databases.query_database(
         database_id=db_id,
         filter={
             "property": "Synced",
@@ -87,7 +87,7 @@ def get_folder_from_page(page) -> str:
     return folder_prop["select"]["name"]
 
 def check_all_synced() -> None:
-    query_results = notion.databases.query(
+    query_results = notion.databases.query_database(
         database_id=db_id,
         filter={
             "property": "Synced",
@@ -100,7 +100,7 @@ def check_all_synced() -> None:
     return False if query_results else True
 
 def archive_pages() -> None:
-    query_results = notion.databases.query(
+    query_results = notion.databases.query_database(
         database_id=db_id,
         filter={
             "property": "Synced",
