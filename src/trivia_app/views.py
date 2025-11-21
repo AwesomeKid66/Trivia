@@ -1,15 +1,15 @@
+import json
 import random
 
 from django.http import JsonResponse
-import json
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import get_object_or_404, render
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
 # Import your Question model
-from .models import Question, Progress
+from .models import Progress, Question
 
 
 # Page where user types their name before starting the quiz
