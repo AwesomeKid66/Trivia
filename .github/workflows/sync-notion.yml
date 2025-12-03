@@ -31,7 +31,7 @@ jobs:
 
       - name: Run sync script
         env:
-          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }} 
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
           NOTION_DATABASE_ID: ${{ secrets.NOTION_DATABASE_ID }}
         run: |
           python src/scripts/notion_sync.py
@@ -40,7 +40,7 @@ jobs:
         run: |
           git config --global user.name 'github-actions'
           git config --global user.email 'github-actions@github.com'
-          git add data/database.db
+          git add database/database.db
           git diff --cached --quiet || git commit -m "📥 Sync Notion questions"
 
       - name: Push changes
