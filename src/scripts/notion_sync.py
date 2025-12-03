@@ -83,7 +83,9 @@ def check_all_synced() -> None:
         database_id=db_id, filter={"property": "Synced", "checkbox": {"equals": False}}
     )
 
-    return False if query_results else True
+    results = query_results.get("results", [])
+
+    return False if results else True
 
 
 def archive_pages() -> None:
