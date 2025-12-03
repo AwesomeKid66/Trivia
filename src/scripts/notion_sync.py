@@ -23,7 +23,6 @@ class QA:
     question: str
     answer: str
 
-
 load_dotenv()
 
 notion = Client(auth=os.getenv("NOTION_TOKEN"))
@@ -32,11 +31,25 @@ db_id = os.getenv("NOTION_DATABASE_ID")
 # Base data directory
 DB_PATH = Path(__file__).parent.parent / "data" / "database.db"
 
+def get_data_source_id() -> str:
+    db = notion.databases.retrieve(database_id=db_id)
+    data_sources = db.get("data_sources", [])
+    if not data_sources:
+        raise RuntimeError("No data sources found in the Notion database.")
+    return data_sources[0]["id"]
+
+DATA_SOURCE_ID = get_data_source_id()
 
 def fetch_new_questions() -> deque:
     new_questions_per_folder = deque()
     query_results = notion.data_sources.query(
-        database_id=db_id, filter={"property": "Synced", "checkbox": {"equals": False}}
+        data_source_id=DATA_SOURCE_ID,
+        filter={
+            "property": "Synced",
+            "checkbox": {
+                "equals": False
+            }
+        }
     )
 
     results = query_results.get("results", [])
@@ -66,10 +79,15 @@ def fetch_new_questions() -> deque:
         # Add to folder bucket
         new_questions_per_folder.append(data)
 
-        # Mark page as synced
-        notion.pages.update(page_id=page["id"], properties={"Synced": {"checkbox": True}})
-    return new_questions_per_folder
 
+        # Mark page as synced
+        notion.pages.update(
+            page_id=page["id"],
+            properties={
+                "Synced": {"checkbox": True}
+            }
+        )
+    return new_questions_per_folder
 
 def get_folder_from_page(page) -> str:
     props = page["properties"]
@@ -77,26 +95,37 @@ def get_folder_from_page(page) -> str:
 
     return folder_prop["select"]["name"]
 
-
 def check_all_synced() -> None:
     query_results = notion.data_sources.query(
-        database_id=db_id, filter={"property": "Synced", "checkbox": {"equals": False}}
+        data_source_id=DATA_SOURCE_ID,
+        filter={
+            "property": "Synced",
+            "checkbox": {
+                "equals": False
+            }
+        }
     )
 
-    results = query_results.get("results", [])
-
-    return False if results else True
-
+    return False if query_results else True
 
 def archive_pages() -> None:
     query_results = notion.data_sources.query(
-        database_id=db_id, filter={"property": "Synced", "checkbox": {"equals": True}}
+        data_source_id=DATA_SOURCE_ID,
+        filter={
+            "property": "Synced",
+            "checkbox": {
+                "equals": True
+            }
+        }
     )
 
     results = query_results.get("results", [])
 
     for page in results:
-        notion.pages.update(page_id=page["id"], archived=True)
+        notion.pages.update(
+            page_id=page["id"],
+            archived=True
+        )
 
 
 def main():
@@ -123,7 +152,6 @@ def main():
         print("✅ All synced pages archived.")
     else:
         print("⚠️ Some pages are still not synced. Archiving skipped.")
-
 
 if __name__ == "__main__":
     main()
