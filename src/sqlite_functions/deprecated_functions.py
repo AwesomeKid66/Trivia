@@ -3,8 +3,8 @@ import sqlite3
 
 DB_PATH = Path(__file__).parent.parent.parent / "data" / "database.db"
 
-def remove_column() -> None:
 
+def remove_column() -> None:
     with sqlite3.connect(DB_PATH) as conn:
         cursor = conn.cursor()
 

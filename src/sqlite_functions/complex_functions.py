@@ -11,6 +11,7 @@ DB_PATH = Path(__file__).parent.parent.parent / "data" / "database.db"
 def normalize_text(x: str) -> str:
     return (x or "").strip().casefold()
 
+
 def check_for_duplicates(topic: str, threshold: float = 0.6) -> list:
     """
     Find groups of semantically similar questions in the database for a given topic.
@@ -68,11 +69,13 @@ def check_for_duplicates(topic: str, threshold: float = 0.6) -> list:
         visited[i] = True
         while q:
             u = q.popleft()
-            comp.append({
-                "id": ids[u],
-                "question": questions[u],
-                "answer": answers[u],
-            })
+            comp.append(
+                {
+                    "id": ids[u],
+                    "question": questions[u],
+                    "answer": answers[u],
+                }
+            )
             for v in adj[u]:
                 if not visited[v]:
                     visited[v] = True
@@ -88,6 +91,7 @@ def check_for_duplicates(topic: str, threshold: float = 0.6) -> list:
 
     return clusters
 
+
 def set_likelihood(question_id: int, likelihood: int):
     """Update likelihood for a specific question."""
     if likelihood < 1 or likelihood > 5:
@@ -99,6 +103,7 @@ def set_likelihood(question_id: int, likelihood: int):
             (likelihood, question_id),
         )
         conn.commit()
+
 
 def interactive_update_likelihood(topic: str):
     """Loop through questions in a topic and let user set likelihood."""
@@ -136,6 +141,7 @@ def interactive_update_likelihood(topic: str):
                         print("⚠️ Please enter a number between 1 and 5.")
                 except ValueError:
                     print("⚠️ Invalid input. Try again.")
+
 
 if __name__ == "__main__":
     interactive_update_likelihood("Stranger Things")

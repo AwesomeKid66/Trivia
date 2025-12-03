@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+
+{% block title %}Study · {{ topic }}{% endblock %}
+
+{% block extra_head %}
+<script>
+  let questions = {{ questions|tojson }};
+  let userName = "{{ user }}";
+  let currentIndex = 0;
+  let mode = "{{ mode }}";  // "all" or "missed"
+
+  const grouped = {};
+  questions.forEach(q => {
+      const level = parseInt(q.likelihood, 10) || 0;
+      if (!grouped[level]) grouped[level] = [];
+      grouped[level].push(q);
+  });
+
+  function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+  }
+
+  let sortedQuestions = [];
+  [5, 4, 3, 2, 1].forEach(level => {
+      if (grouped[level]) sortedQuestions = sortedQuestions.concat(shuffle(grouped[level]));
+  });
+
+  questions = sortedQuestions;
+
+  const statsUrl = "{{ url_for('stats', user_name=user) }}";
+  const homeUrl = "{{ url_for('user_home', user_name=user) }}";
+  const topicsUrl = "{{ url_for('index') }}";
+
+  function updateMeta() {
+      const remaining = questions.length;
+      const metaSpan = document.getElementById("meta");
+      if (!metaSpan) return;
+      if (remaining === 0) {
+          metaSpan.textContent = "All done! 🎉";
+      } else {
+          metaSpan.textContent = remaining + " question" + (remaining === 1 ? "" : "s") + " remaining";
+      }
+  }
+
+  function showQuestion() {
+      const quizDiv = document.getElementById("quiz");
+      if (!questions.length) {
+          quizDiv.innerHTML = `
+            <h2>You're done! 🎉</h2>
+            <p class="muted">You’ve answered every tracked question for this mode.</p>
+            <div class="stack-h" style="margin-top: 1rem;">
+              <a href="${homeUrl}" class="btn btn-outline btn-full">🏠 My study home</a>
+            </div>
+            <div class="stack-h" style="margin-top: 0.4rem;">
+              <a href="${statsUrl}" class="btn btn-outline btn-full">📊 View my stats</a>
+            </div>
+            <div class="stack-h" style="margin-top: 0.4rem;">
+              <a href="${topicsUrl}" class="btn btn-outline btn-full">📚 Back to topics</a>
+            </div>
+          `;
+          updateMeta();
+          return;
+      }
+      const q = questions[currentIndex];
+      document.getElementById("question").innerText = q.question;
+      document.getElementById("answer").innerText = "";
+      updateMeta();
+  }
+
+  function revealAnswer() {
+      if (!questions.length) return;
+      document.getElementById("answer").innerText = questions[currentIndex].answer;
+  }
+
+  function mark(status) {
+      if (!questions.length) return;
+      let qid = questions[currentIndex].id;
+
+      fetch("{{ url_for('update_progress') }}", {
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json"
+          },
+          body: JSON.stringify({user_name: userName, question_id: qid, status: status})
+      }).catch(err => {
+          console.error("Failed to update progress:", err);
+      });
+
+      if (status === "correct") {
+          questions.splice(currentIndex, 1);
+          if (currentIndex >= questions.length) currentIndex = 0;
+      } else {
+          currentIndex = (currentIndex + 1) % questions.length;
+      }
+
+      showQuestion();
+  }
+
+  window.addEventListener("load", showQuestion);
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <div class="card-title">
+            Study: {{ topic }}
+            <span class="card-title-pill">
+                {% if mode == 'missed' %}
+                    Missed only
+                {% else %}
+                    All questions
+                {% endif %}
+            </span>
+        </div>
+        <div class="card-subtitle">
+            Hi {{ user }}! Reveal each answer, then tell us if you got it right.
+            In “missed only” mode, you’ll only see questions you’ve previously marked wrong.
+        </div>
+        <div class="pill-row">
+            <span class="pill">User: {{ user }}</span>
+            <span class="pill"><span id="meta">Loading…</span></span>
+            <span class="pill">
+                <a href="{{ url_for('stats', user_name=user) }}" style="color: inherit; text-decoration: none;">
+                    📊 View stats
+                </a>
+            </span>
+            <span class="pill">
+                <a href="{{ url_for('user_home', user_name=user) }}" style="color: inherit; text-decoration: none;">
+                    🏠 My home
+                </a>
+            </span>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <div class="stack-sm" style="margin-bottom: 0.8rem;">
+            <div class="badge-soft">Mode</div>
+            <div class="stack-h">
+                <a href="{{ url_for('study', topic=topic) }}?user={{ user|urlencode }}&mode=all"
+                   class="btn btn-sm {% if mode != 'missed' %}btn-primary{% else %}btn-outline{% endif %}">
+                    All questions
+                </a>
+                <a href="{{ url_for('study', topic=topic) }}?user={{ user|urlencode }}&mode=missed"
+                   class="btn btn-sm {% if mode == 'missed' %}btn-primary{% else %}btn-outline{% endif %}">
+                    Missed only
+                </a>
+            </div>
+        </div>
+
+        <div id="quiz" class="stack">
+            <div class="stack-sm">
+                <div class="badge-soft">Question</div>
+                <p id="question" style="font-size: 1.1rem; line-height: 1.5;"></p>
+            </div>
+
+            <div class="stack-sm">
+                <div class="badge-soft">Answer</div>
+                <p id="answer" class="muted"></p>
+            </div>
+
+            <div class="stack-h">
+                <button type="button" class="btn btn-outline btn-full" onclick="revealAnswer()">
+                    👀 Show answer
+                </button>
+            </div>
+
+            <div class="stack-h">
+                <button type="button" class="btn btn-success btn-full" onclick="mark('correct')">
+                    ✅ I got it right
+                </button>
+                <button type="button" class="btn btn-danger btn-full" onclick="mark('wrong')">
+                    ❌ I need to see this again
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,16 +1,20 @@
 version: "3.9"
 
 services:
-  trivia_app:
+  trivia:
     build: .
-    container_name: trivia_app
-    env_file: .env
-    ports:
-      - "8000:8000"
-    volumes:
-      - ./data:/app/data  # keep SQLite DB persistent
-      - ./src/trivia_app:/app/trivia_app # for live code updates
-      - ./src/trivia_site:/app/trivia_site # for live code updates
-      - ./src/manage.py:/app/manage.py # for live code updates
-
+    container_name: trivia-flask
     restart: unless-stopped
+
+    ports:
+      - "5002:8001"   # host:container
+
+    environment:
+      - FLASK_APP=src/trivia_web.py
+      - TRIVIA_SECRET_KEY=change-this
+      - TRIVIA_DB_PATH=/app/database/database.db
+
+    volumes:
+      - ./database:/app/database
+      - ./src:/app/src       # optional, if you want live editing
+      - ./src/templates:/app/templates

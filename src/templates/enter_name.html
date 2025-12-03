@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Enter Your Name · {{ topic }}{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <div class="card-title">
+            Start studying: {{ topic }}
+            <span class="card-title-pill">Step 2</span>
+        </div>
+        <div class="card-subtitle">
+            We store progress per name and topic, so if you come back later with
+            the same name we’ll remember which questions you’ve mastered.
+        </div>
+    </div>
+
+    <div class="card-body">
+        <form method="get" action="{{ url_for('study', topic=topic) }}" class="stack">
+            <div class="field">
+                <label for="user">Your name</label>
+                <input type="text" name="user" id="user" required placeholder="e.g., Michael O">
+                <div class="helper-text">
+                    Use the same name each time so we can track your progress.
+                    If there are multiple Michaels, use something like “Michael O” or “Michael (Dad)”.
+                </div>
+            </div>
+
+            <div class="stack-h">
+                <button type="submit" class="btn btn-primary btn-full">
+                    Start studying {{ topic }}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
