@@ -3,6 +3,7 @@ import sqlite3
 
 DB_PATH = Path(__file__).parent.parent.parent / "data" / "database.db"
 
+
 def insert_question(topic: str, question: str, answer: str) -> None:
     """
     Inserts a trivia question into the database.
@@ -16,10 +17,13 @@ def insert_question(topic: str, question: str, answer: str) -> None:
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
-    cursor.execute("""
+    cursor.execute(
+        """
         INSERT INTO questions (topic, question, answer, likelihood)
         VALUES (?, ?, ?, ?)
-    """, (topic, question, answer, 3))
+    """,
+        (topic, question, answer, 3),
+    )
 
     conn.commit()
     conn.close()
@@ -47,10 +51,7 @@ def delete_questions(ids: int | list[int]) -> None:
                 continue
 
             user_input = input(
-                f"Delete this question (id={qid})?\n"
-                f"Question: {row[2]}\n"
-                f"Answer: {row[3]}\n"
-                f"(y/n): "
+                f"Delete this question (id={qid})?\nQuestion: {row[2]}\nAnswer: {row[3]}\n(y/n): "
             )
 
             if user_input.lower().strip() == "y":
@@ -60,6 +61,7 @@ def delete_questions(ids: int | list[int]) -> None:
                 print(f"Skipped question id={qid}")
 
         conn.commit()
+
 
 def get_unique_topics() -> list:
     """
@@ -90,7 +92,7 @@ def add_question() -> None:
 
     answer = input("What is the answer?")
 
-    insert_question(topic,question,answer)
+    insert_question(topic, question, answer)
 
 
 def load_topic(topic: str) -> list:
@@ -147,11 +149,13 @@ def modify_entry(id: int, field: str) -> None:
 
         print(f"{field.capitalize()} updated successfully.")
 
+
 def add_likelihood_column():
     with sqlite3.connect(DB_PATH) as conn:
         cursor = conn.cursor()
         cursor.execute("ALTER TABLE questions ADD COLUMN likelihood INTEGER DEFAULT 3")
         conn.commit()
+
 
 def list_questions():
     """List all questions in the database."""
@@ -161,6 +165,7 @@ def list_questions():
         questions = load_topic(topic)
         for q in questions:
             print(f"ID: {q[0]} | Q: {q[2]} | A: {q[3]} | Likelihood: {q[4]}")
+
 
 def interactive_menu():
     while True:
@@ -204,6 +209,7 @@ def interactive_menu():
 
         else:
             print("Invalid choice. Try again.")
+
 
 if __name__ == "__main__":
     interactive_menu()

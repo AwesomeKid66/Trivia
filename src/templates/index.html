@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Choose a Topic · Trivia Study{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <div class="card-title">
+            Choose a topic
+            <span class="card-title-pill">Step 1</span>
+        </div>
+        <div class="card-subtitle">
+            Pick what you want to study. We’ll then ask for your name so we can remember your progress.
+        </div>
+        <div class="pill-row">
+            <span class="pill">Mobile-friendly</span>
+            <span class="pill">Progress-aware</span>
+            <span class="pill">Spaced repetition</span>
+        </div>
+    </div>
+
+    <div class="card-body">
+        {% if topics %}
+            <div class="stack">
+                {% for topic in topics %}
+                    <button class="btn btn-full"
+                            onclick="startTopic('{{ topic|escape }}')">
+                        📚 {{ topic }}
+                    </button>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="muted">No topics found in the database yet.</p>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_head %}
+<script>
+    function startTopic(topic) {
+        window.location.href = "/study/" + encodeURIComponent(topic) + "/enter/";
+    }
+</script>
+{% endblock %}

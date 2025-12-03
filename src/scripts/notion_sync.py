@@ -31,10 +31,19 @@ db_id = os.getenv("NOTION_DATABASE_ID")
 # Base data directory
 DB_PATH = Path(__file__).parent.parent / "data" / "database.db"
 
+def get_data_source_id() -> str:
+    db = notion.databases.retrieve(database_id=db_id)
+    data_sources = db.get("data_sources", [])
+    if not data_sources:
+        raise RuntimeError("No data sources found in the Notion database.")
+    return data_sources[0]["id"]
+
+DATA_SOURCE_ID = get_data_source_id()
+
 def fetch_new_questions() -> deque:
     new_questions_per_folder = deque()
     query_results = notion.data_sources.query(
-        database_id=db_id,
+        data_source_id=DATA_SOURCE_ID,
         filter={
             "property": "Synced",
             "checkbox": {
@@ -88,7 +97,7 @@ def get_folder_from_page(page) -> str:
 
 def check_all_synced() -> None:
     query_results = notion.data_sources.query(
-        database_id=db_id,
+        data_source_id=DATA_SOURCE_ID,
         filter={
             "property": "Synced",
             "checkbox": {
@@ -101,7 +110,7 @@ def check_all_synced() -> None:
 
 def archive_pages() -> None:
     query_results = notion.data_sources.query(
-        database_id=db_id,
+        data_source_id=DATA_SOURCE_ID,
         filter={
             "property": "Synced",
             "checkbox": {

@@ -1,0 +1,190 @@
+{% extends "base.html" %}
+
+{% block title %}Stats · {{ user_name }}{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <div class="card-title">
+            Stats for {{ user_name }}
+            <span class="card-title-pill">Progress overview</span>
+        </div>
+        <div class="card-subtitle">
+            These stats are based on everything you’ve marked as
+            <strong>right</strong> or <strong>wrong</strong> across all topics.
+            Use a unique name (e.g. “Michael O”, “Michael (Dad)”) so your stats
+            don’t collide with someone else’s.
+        </div>
+        <div class="pill-row">
+            <span class="pill">
+                <a href="{{ url_for('user_home', user_name=user_name) }}" style="color: inherit; text-decoration: none;">
+                    🏠 Go to my study home
+                </a>
+            </span>
+            <span class="pill">
+                <a href="{{ url_for('index') }}" style="color: inherit; text-decoration: none;">
+                    📚 Back to topics
+                </a>
+            </span>
+        </div>
+    </div>
+
+    <div class="card-body">
+        {% if not overall %}
+            <p class="muted">
+                No progress recorded yet for <strong>{{ user_name }}</strong>.
+                Start a study session first and mark some questions as right or wrong.
+            </p>
+        {% else %}
+            <div class="stack">
+                <!-- Overall summary -->
+                <div class="stack-h">
+                    <div class="stack-sm" style="flex: 1;">
+                        <div class="badge-soft">Total tracked</div>
+                        <div style="font-size: 1.4rem; font-weight: 600;">
+                            {{ overall.total }}
+                        </div>
+                        <div class="muted">Questions you’ve interacted with at least once</div>
+                    </div>
+                    <div class="stack-sm" style="flex: 1;">
+                        <div class="badge-soft">Correct</div>
+                        <div style="font-size: 1.4rem; font-weight: 600; color: #4ade80;">
+                            {{ overall.correct }}
+                        </div>
+                        <div class="muted">Currently marked as mastered</div>
+                    </div>
+                    <div class="stack-sm" style="flex: 1;">
+                        <div class="badge-soft">Wrong / in progress</div>
+                        <div style="font-size: 1.4rem; font-weight: 600; color: #f97373;">
+                            {{ overall.wrong }}
+                        </div>
+                        <div class="muted">Still being worked on</div>
+                    </div>
+                    <div class="stack-sm" style="flex: 1;">
+                        <div class="badge-soft">Completion</div>
+                        <div style="font-size: 1.4rem; font-weight: 600;">
+                            {{ overall.completion|round(1) }}%
+                        </div>
+                        <div class="muted">Correct / total</div>
+                    </div>
+                </div>
+
+                <!-- Global reset -->
+                <form method="post"
+                      action="{{ url_for('reset_progress_user', user_name=user_name) }}"
+                      onsubmit="return confirm('Reset ALL progress for {{ user_name }} across every topic?');">
+                    <button type="submit" class="btn btn-danger btn-sm" style="margin-top: 0.75rem;">
+                        🔄 Reset ALL progress for {{ user_name }}
+                    </button>
+                </form>
+
+                <!-- Per-topic breakdown -->
+                <div class="stack-sm">
+                    <div class="badge-soft">Per-topic breakdown</div>
+                    {% if topic_rows %}
+                        <div class="stack">
+                            {% for row in topic_rows %}
+                                {% set done = row.correct %}
+                                {% set total = row.total %}
+                                {% set pct = (done / total * 100) if total else 0 %}
+                                <div style="border-radius: 0.9rem; border: 1px solid rgba(148,163,184,0.5); padding: 0.75rem 0.9rem;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.6rem;">
+                                        <div>
+                                            <div style="font-weight: 600;">{{ row.topic }}</div>
+                                            <div class="muted">
+                                                {{ done }} correct · {{ row.wrong }} wrong · {{ total }} total
+                                            </div>
+                                        </div>
+                                        <div style="text-align: right;">
+                                            <div style="font-size: 1.1rem; font-weight: 600;">
+                                                {{ pct|round(1) }}%
+                                            </div>
+                                            <div class="muted">complete</div>
+                                        </div>
+                                    </div>
+                                    <div class="stack-h" style="margin-top: 0.6rem;">
+                                        <a href="{{ url_for('study', topic=row.topic) }}?user={{ user_name|urlencode }}&mode=all"
+                                           class="btn btn-sm btn-outline">
+                                            ▶ Study all
+                                        </a>
+                                        <a href="{{ url_for('study', topic=row.topic) }}?user={{ user_name|urlencode }}&mode=missed"
+                                           class="btn btn-sm btn-outline">
+                                            ↺ Study missed only
+                                        </a>
+                                        <form method="post"
+                                              action="{{ url_for('reset_topic_progress', user_name=user_name, topic=row.topic) }}"
+                                              onsubmit="return confirm('Reset progress for topic {{ row.topic }}?');">
+                                            <button type="submit" class="btn btn-sm btn-danger">
+                                                🧹 Reset topic
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="muted">No per-topic stats yet.</p>
+                    {% endif %}
+                </div>
+
+                <!-- Detailed questions -->
+                <div class="stack-sm">
+                    <div class="badge-soft">Questions you’ve seen</div>
+                    {% if by_topic %}
+                        <div class="stack">
+                            {% for topic, groups in by_topic.items() %}
+                                <details style="border-radius: 0.9rem; border: 1px solid rgba(148,163,184,0.5); padding: 0.75rem 0.9rem;" {% if loop.first %}open{% endif %}>
+                                    <summary style="cursor: pointer; font-weight: 600;">
+                                        {{ topic }}
+                                        <span class="muted" style="margin-left: 0.25rem;">
+                                            ({{ groups.correct|length }} correct · {{ groups.wrong|length }} wrong)
+                                        </span>
+                                    </summary>
+
+                                    <div class="stack" style="margin-top: 0.65rem;">
+                                        {% if groups.correct %}
+                                            <div class="stack-sm">
+                                                <div class="badge-soft">Correct</div>
+                                                <ul class="muted" style="margin: 0; padding-left: 1.1rem;">
+                                                {% for q in groups.correct %}
+                                                    <li style="margin-bottom: 0.4rem;">
+                                                        <strong>{{ q.question }}</strong><br>
+                                                        <span>Answer: {{ q.answer }}</span><br>
+                                                        <span class="muted">Last updated: {{ q.updated_at }}</span>
+                                                    </li>
+                                                {% endfor %}
+                                                </ul>
+                                            </div>
+                                        {% endif %}
+
+                                        {% if groups.wrong %}
+                                            <div class="stack-sm">
+                                                <div class="badge-soft">Wrong / in progress</div>
+                                                <ul class="muted" style="margin: 0; padding-left: 1.1rem;">
+                                                {% for q in groups.wrong %}
+                                                    <li style="margin-bottom: 0.4rem;">
+                                                        <strong>{{ q.question }}</strong><br>
+                                                        <span>Answer: {{ q.answer }}</span><br>
+                                                        <span class="muted">Last updated: {{ q.updated_at }}</span>
+                                                    </li>
+                                                {% endfor %}
+                                                </ul>
+                                            </div>
+                                        {% endif %}
+
+                                        {% if not groups.correct and not groups.wrong %}
+                                            <p class="muted">No detailed questions yet for this topic.</p>
+                                        {% endif %}
+                                    </div>
+                                </details>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <p class="muted">No question-level history yet.</p>
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

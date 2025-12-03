@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Trivia Study{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Google Font (optional but nice) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #0f172a;
+            --bg-soft: #111827;
+            --card-bg: #020617;
+            --accent: #38bdf8;
+            --accent-soft: rgba(56, 189, 248, 0.18);
+            --text-main: #e5e7eb;
+            --text-muted: #9ca3af;
+            --border-subtle: rgba(148, 163, 184, 0.3);
+            --danger: #f97373;
+            --success: #4ade80;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+            sans-serif;
+            background: radial-gradient(circle at top, #1d283a 0, var(--bg) 45%, #020617 100%);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .app-shell {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            backdrop-filter: blur(12px);
+            background: linear-gradient(to right, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.7));
+            border-bottom: 1px solid rgba(148, 163, 184, 0.3);
+            padding: 0.75rem 1.25rem;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .header-inner {
+            max-width: 960px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .brand-logo {
+            width: 32px;
+            height: 32px;
+            border-radius: 999px;
+            background: radial-gradient(circle at 30% 30%, #e0f2fe 0, #0ea5e9 35%, #0369a1 70%, #020617 100%);
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.65);
+        }
+
+        .brand-title {
+            font-weight: 700;
+            letter-spacing: 0.03em;
+            font-size: 1.05rem;
+        }
+
+        .brand-subtitle {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .nav-link {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            border-radius: 999px;
+            padding: 0.35rem 0.8rem;
+            border: 1px solid transparent;
+        }
+
+        .nav-link:hover {
+            border-color: var(--accent);
+            background-color: rgba(15, 23, 42, 0.9);
+            color: var(--text-main);
+        }
+
+        main {
+            flex: 1;
+            padding: 1.2rem 0.75rem 2rem;
+        }
+
+        .main-inner {
+            max-width: 960px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: radial-gradient(circle at top left, #0b1220 0, var(--card-bg) 35%, #020617 100%);
+            border-radius: 1.25rem;
+            border: 1px solid var(--border-subtle);
+            box-shadow:
+                0 18px 45px rgba(15, 23, 42, 0.75),
+                0 0 0 1px rgba(15, 23, 42, 0.9);
+            padding: 1.5rem 1.25rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        @media (min-width: 768px) {
+            main {
+                padding: 2rem 1.5rem 3rem;
+            }
+
+            .card {
+                padding: 2rem 1.75rem;
+            }
+        }
+
+        .card::before {
+            content: "";
+            position: absolute;
+            inset: -40%;
+            background:
+                radial-gradient(circle at top left, rgba(56, 189, 248, 0.09) 0, transparent 40%),
+                radial-gradient(circle at bottom right, rgba(129, 140, 248, 0.08) 0, transparent 45%);
+            opacity: 1;
+            pointer-events: none;
+        }
+
+        .card-header {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        @media (min-width: 640px) {
+            .card-title {
+                font-size: 1.45rem;
+            }
+        }
+
+        .card-title-pill {
+            font-size: 0.7rem;
+            padding: 0.15rem 0.55rem;
+            border-radius: 999px;
+            border: 1px solid rgba(56, 189, 248, 0.45);
+            background: var(--accent-soft);
+            color: #e0f2fe;
+            text-transform: uppercase;
+            letter-spacing: 0.09em;
+        }
+
+        .card-subtitle {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .card-body {
+            position: relative;
+            z-index: 1;
+        }
+
+        .pill-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.35rem;
+            margin-top: 0.4rem;
+        }
+
+        .pill {
+            font-size: 0.73rem;
+            padding: 0.18rem 0.55rem;
+            border-radius: 999px;
+            border: 1px solid rgba(148, 163, 184, 0.45);
+            color: var(--text-muted);
+        }
+
+        /* Generic button styles */
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.35rem;
+            border-radius: 999px;
+            padding: 0.55rem 1.1rem;
+            font-size: 0.95rem;
+            font-weight: 500;
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: transform 0.08s ease-out, box-shadow 0.08s ease-out, border-color 0.12s ease;
+            background-color: rgba(15, 23, 42, 0.95);
+            color: var(--text-main);
+            box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.6);
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            border-color: rgba(148, 163, 184, 0.9);
+            box-shadow: 0 12px 30px rgba(15, 23, 42, 0.9);
+        }
+
+        .btn-primary {
+            background: linear-gradient(to right, #0ea5e9, #22c55e);
+            color: #f9fafb;
+            border-color: rgba(56, 189, 248, 0.8);
+            box-shadow: 0 12px 30px rgba(34, 197, 94, 0.4);
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 16px 40px rgba(34, 197, 94, 0.55);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border-color: rgba(148, 163, 184, 0.8);
+        }
+
+        .btn-success {
+            background: rgba(22, 163, 74, 0.16);
+            border-color: var(--success);
+            color: #bbf7d0;
+        }
+
+        .btn-danger {
+            background: rgba(220, 38, 38, 0.16);
+            border-color: var(--danger);
+            color: #fecaca;
+        }
+
+        .btn-full {
+            width: 100%;
+        }
+
+        .btn-sm {
+            padding: 0.4rem 0.85rem;
+            font-size: 0.82rem;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 0.55rem 0.8rem;
+            border-radius: 999px;
+            border: 1px solid rgba(55, 65, 81, 0.9);
+            background: rgba(15, 23, 42, 0.9);
+            color: var(--text-main);
+            font-size: 0.95rem;
+            outline: none;
+        }
+
+        input[type="text"]:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.65);
+        }
+
+        label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 0.3rem;
+            display: inline-block;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            margin-bottom: 0.9rem;
+        }
+
+        .helper-text {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .muted {
+            color: var(--text-muted);
+            font-size: 0.86rem;
+        }
+
+        .stack {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .stack-sm {
+            display: flex;
+            flex-direction: column;
+            gap: 0.45rem;
+        }
+
+        .stack-h {
+            display: flex;
+            flex-direction: row;
+            gap: 0.6rem;
+        }
+
+        @media (max-width: 480px) {
+            .stack-h {
+                flex-direction: column;
+            }
+        }
+
+        .badge-soft {
+            font-size: 0.72rem;
+            padding: 0.2rem 0.55rem;
+            border-radius: 999px;
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid rgba(148, 163, 184, 0.5);
+            color: var(--text-muted);
+        }
+
+        footer {
+            padding: 0.75rem 1.25rem 1.25rem;
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            text-align: center;
+        }
+    </style>
+
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+<div class="app-shell">
+    <header>
+        <div class="header-inner">
+            <div class="brand">
+                <div class="brand-logo"></div>
+                <div>
+                    <div class="brand-title">Trivia Studio</div>
+                    <div class="brand-subtitle">Smart spaced-repetition for your topics</div>
+                </div>
+            </div>
+            <a href="{{ url_for('index') }}" class="nav-link">
+                ⬅ Back to topics
+            </a>
+        </div>
+    </header>
+
+    <main>
+        <div class="main-inner">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <footer>
+        Study mode is saved per name &amp; topic. Refreshing is safe once you’ve entered.
+    </footer>
+</div>
+</body>
+</html>
+

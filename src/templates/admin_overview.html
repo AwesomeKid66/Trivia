@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Overview{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <div class="card-title">
+            Admin overview
+            <span class="card-title-pill">Helper</span>
+        </div>
+        <div class="card-subtitle">
+            Quick snapshot of how many questions, topics, and users exist in the system.
+            This page is not secured, so don’t expose it on a public internet-facing instance without protection.
+        </div>
+    </div>
+
+    <div class="card-body">
+        <div class="stack">
+            <div class="stack-h">
+                <div class="stack-sm" style="flex: 1;">
+                    <div class="badge-soft">Total questions</div>
+                    <div style="font-size: 1.4rem; font-weight: 600;">
+                        {{ total_questions }}
+                    </div>
+                </div>
+                <div class="stack-sm" style="flex: 1;">
+                    <div class="badge-soft">Total topics</div>
+                    <div style="font-size: 1.4rem; font-weight: 600;">
+                        {{ total_topics }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="stack-sm">
+                <div class="badge-soft">Users with progress</div>
+                {% if user_rows %}
+                    <div class="stack">
+                        {% for row in user_rows %}
+                            <div style="border-radius: 0.9rem; border: 1px solid rgba(148,163,184,0.5); padding: 0.6rem 0.8rem;">
+                                <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.6rem;">
+                                    <div>
+                                        <div style="font-weight: 600;">
+                                            <a href="{{ url_for('user_home', user_name=row.user_name) }}"
+                                               style="color: inherit; text-decoration: none;">
+                                                {{ row.user_name }}
+                                            </a>
+                                        </div>
+                                        <div class="muted">
+                                            {{ row.correct }} correct · {{ row.wrong }} wrong · {{ row.total }} total
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="muted">No users have any progress yet.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
