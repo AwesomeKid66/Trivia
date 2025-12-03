@@ -29,7 +29,7 @@ notion = Client(auth=os.getenv("NOTION_TOKEN"))
 db_id = os.getenv("NOTION_DATABASE_ID")
 
 # Base data directory
-DB_PATH = Path(__file__).parent.parent / "data" / "database.db"
+DB_PATH = Path(__file__).parent.parent.parent / "database" / "database.db"
 
 def get_data_source_id() -> str:
     db = notion.databases.retrieve(database_id=db_id)
