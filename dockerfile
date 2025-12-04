@@ -22,8 +22,8 @@ ENV FLASK_APP=src/trivia_web.py
 # Your SQLite DB path inside container
 ENV TRIVIA_DB_PATH=/app/database/database.db
 
-EXPOSE 8001
+EXPOSE 8000
 
 # MATCH YOUR EXISTING PATTERN EXACTLY:
 # Use Flask dev server listening on all interfaces
-CMD ["python", "-m", "flask", "run", "--host=0.0.0.0", "--port=8001"]
+CMD ["python", "-m", "flask", "run", "--host=0.0.0.0", "--port=8000"]

@@ -7,7 +7,7 @@ services:
     restart: unless-stopped
 
     ports:
-      - "5002:8001"   # host:container
+      - "8000:8000"   # host:container
 
     environment:
       - FLASK_APP=src/trivia_web.py
